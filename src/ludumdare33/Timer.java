@@ -25,11 +25,11 @@ public class Timer {
 	
 	public void reset() {
 		currentTime = 0;
+		lastTimeCheck = processing.millis();
 	}
 	
 	public void reset(int _goal) {
 		reset();
-		currentTime = 0;
 		goal = _goal;
 	}
 	
