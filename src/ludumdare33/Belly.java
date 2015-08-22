@@ -111,5 +111,9 @@ public class Belly implements GameObject{
 	private float computeAnchorPoint(float _factorAnchorPoint, float refAnchorPoint, float _toSin, int _remainingTime, float _dropOrigin) {
 		return (float) (_factorAnchorPoint * (refAnchorPoint + Math.abs(_dropOrigin - refAnchorPoint) * SPEED_BELLY_FACTOR * _remainingTime * Math.sin(_toSin)));
 	}
+	
+	public PVector getAnchorPoint() {
+		return anchorPoint;
+	}
 
 }

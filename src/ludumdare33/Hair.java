@@ -1,18 +1,29 @@
 package ludumdare33;
 
 import processing.core.PApplet;
+import processing.core.PVector;
 
 public class Hair implements GameObject {
 
 	private PApplet processing;
 	
+	// Hair position
+	private PVector currentHead;
+	private PVector currentFoot;
+	private PVector SLEEP_FOOT;
+	private final float SIZE = 50f;
+
 	public Hair(PApplet _processing) {
 		processing = _processing;
+		
+		currentHead = new PVector();
+		currentFoot = new PVector();
 	}
-	
+
 	@Override
 	public void update() {
-		
+		currentHead.x = currentFoot.x;
+		currentHead.y = currentFoot.y - SIZE;
 		
 	}
 
@@ -22,13 +33,19 @@ public class Hair implements GameObject {
 		processing.fill(0);
 		processing.stroke(0);
 		processing.strokeWeight(10);
-		processing.bezier((float) processing.width / 2f, (float) processing.height * 2f/3f, (float) processing.width / 2f, (float) processing.height * 2f/3f - 25f, (float) processing.width / 2f + 10f, (float) processing.height * 2f/3f - 35f, (float) processing.width / 2f + 25f, (float) processing.height * 2f/3f - 50f);
+		processing.line(currentFoot.x, processing.height, -1, currentHead.x, currentHead.y, -1);
 	}
 
 	@Override
 	public void init() {
-		// TODO Auto-generated method stub
-		
 	}
 
+	public void setCurrentFoot(PVector _vec) {
+		currentFoot.x = _vec.x;
+		currentFoot.y = _vec.y;
+	}
+
+	
+	
+	
 }
