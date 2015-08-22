@@ -12,45 +12,53 @@ public class Timer {
 	private int goal = 0;
 	private int currentTime = 0;
 	private int delta = 0;
+	private int lastTimeCheck = 0;
 	
 	public Timer(PApplet _processing) {
 		processing = _processing;
-		goal = processing.millis();
-		currentTime = processing.millis();
 	}
 	
 	public boolean isFinished() {
-		currentTime = processing.millis();
+		update();
 		return currentTime >= goal;
 	}
 	
 	public void reset() {
-		currentTime = processing.millis();
+		currentTime = 0;
 	}
 	
 	public void reset(int _goal) {
 		reset();
-		goal = _goal + processing.millis();
+		currentTime = 0;
+		goal = _goal;
 	}
 	
 	public int getDelta() {
-		delta = processing.millis() - currentTime;
-		currentTime = processing.millis();
+		delta = processing.millis() - lastTimeCheck;
+		lastTimeCheck = processing.millis();
 		return delta;
 	}
 	
 	public int getRemainingTime() {
-		currentTime = processing.millis();
+		update();
 		if (isFinished())
 			return 0;
 		else
 			return goal - currentTime;
 	}
 	
+	private void update() {
+		currentTime += processing.millis() - lastTimeCheck;
+		lastTimeCheck = processing.millis();
+	}
+	
 	public float getRemainingRatio() {
-		currentTime = processing.millis();
-		if(goal != 0)
+		update();
+		if(goal == 0)
+			return -1;
+		else if (currentTime > goal)
+			return 1f;
+		else
 			return (float) currentTime / (float) goal;
-		else return -1;
 	}
 }
