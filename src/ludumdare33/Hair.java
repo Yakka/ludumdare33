@@ -22,9 +22,7 @@ public class Hair implements GameObject {
 
 	@Override
 	public void update() {
-		currentHead.x = currentFoot.x;
-		currentHead.y = currentFoot.y - SIZE;
-		
+		setCurrentHead();
 	}
 
 	@Override
@@ -45,7 +43,10 @@ public class Hair implements GameObject {
 		currentFoot.y = _vec.y;
 	}
 
-	
+	private void setCurrentHead() {
+		currentHead.x = currentFoot.x;
+		currentHead.y = 500;
+	}
 	
 	
 }

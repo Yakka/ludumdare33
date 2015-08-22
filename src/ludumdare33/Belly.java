@@ -17,6 +17,7 @@ public class Belly implements GameObject{
 		private enum BellyState {Sleep, Grabbed, Released};
 		private BellyState bellyState;
 		private Timer releaseTimer;
+		private PVector MID_ANCHOR;
 		private final int SPEED_RELEASE_FACTOR = 2; // Time factor: the higher, the longer the belly moves
 		private final float SPEED_BELLY_FACTOR = 0.001f; // The speed of the belly's rebound
 		private PVector factorAnchorPoint; // Correct the direction of the belly
@@ -56,8 +57,9 @@ public class Belly implements GameObject{
 		processing.fill(50);
 		processing.noStroke();
 		processing.beginShape();
-		processing.vertex(0, (int)processing.height*2f/3f);
-		processing.bezierVertex(leftPoint.x, leftPoint.y, anchorPoint.x, anchorPoint.y, rightPoint.x, rightPoint.y);
+		processing.vertex(0, (int)processing.height * 2f/3f);
+		processing.bezierVertex(leftPoint.x, leftPoint.y, anchorPoint.x - MID_ANCHOR.x, MID_ANCHOR.y, anchorPoint.x, anchorPoint.y);
+		processing.bezierVertex(anchorPoint.x, anchorPoint.y, anchorPoint.x + MID_ANCHOR.x, MID_ANCHOR.y, rightPoint.x, rightPoint.y);
 		processing.vertex(processing.width, processing.height);
 		processing.vertex(0, processing.height);
 		processing.endShape();
@@ -68,6 +70,7 @@ public class Belly implements GameObject{
 		LEFT_POINT = new PVector(0, (int)processing.height*2f/3f);
 		RIGHT_POINT = new PVector(processing.width, (int)processing.height*2f/3f);
 		ANCHOR_POINT = new PVector(RIGHT_POINT.x / 2, RIGHT_POINT.y);
+		MID_ANCHOR = new PVector(processing.width / 4, RIGHT_POINT.y);
 		
 		leftPoint = new PVector(LEFT_POINT.x, LEFT_POINT.y);
 		rightPoint = new PVector(RIGHT_POINT.x, RIGHT_POINT.y);
