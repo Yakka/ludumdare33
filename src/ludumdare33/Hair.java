@@ -10,16 +10,23 @@ public class Hair implements GameObject {
 	// Hair position
 	private PVector currentHead;
 	private PVector currentFoot;
+	private PVector currentAnchor;
 	private final float SIZE = 50f;
-	
+	private final float THICKNESS = 3;
+
 	// Hair angle
 	private Timer resetAngleTimer;
 	private final int RESET_ANGLE_TIME = 1000;
 	float cosinus = 0;
 	float sinus = 0;
-	
+
 	// Hair state
-	private enum HairState {Released, Grabbed, PulledOut};
+	private final float MAX_DIST = 50f;
+	private int health;
+	private enum HairState {
+		Released, Grabbed, Hurt, PulledOff
+	};
+
 	private HairState hairState;
 
 	public Hair(PApplet _processing) {
@@ -27,34 +34,72 @@ public class Hair implements GameObject {
 
 		currentHead = new PVector();
 		currentFoot = new PVector();
-		
+		currentAnchor = new PVector();
+
 		resetAngleTimer = new Timer(processing);
 	}
 
 	@Override
 	public void update() {
-		switch(hairState) {
+		float ratio;
+		switch (hairState) {
 		case Released:
 			currentHead.x = currentFoot.x + SIZE * cosinus;
 			currentHead.y = currentFoot.y + SIZE * sinus;
-				float ratio = resetAngleTimer.getRemainingRatio();
-				if(ratio >= 0.9f)
-					ratio = 1;
-				cosinus = PApplet.lerp(cosinus, 0, 1f - ratio);
-				sinus = PApplet.lerp(sinus, -1, 1f - ratio);
+			currentAnchor.x = currentFoot.x + (currentHead.x - currentFoot.x) * 6f/5f;
+			currentAnchor.y = currentFoot.y + (currentFoot.y - currentHead.y) * 4f/5f;
+			ratio = resetAngleTimer.getRemainingRatio();
+			if (ratio >= 0.9f)
+				ratio = 1;
+			cosinus = PApplet.lerp(cosinus, 0, 1f - ratio);
+			sinus = PApplet.lerp(sinus, -1, 1f - ratio);
 			break;
-		default:
+		case Grabbed:
+			setCurrentHead();
+			if(PApplet.dist(currentHead.x, currentHead.y, processing.mouseX, processing.mouseY) > MAX_DIST) {
+				health --;
+				hairState = HairState.Hurt;
+				resetAngleTimer.reset(RESET_ANGLE_TIME);
+			}
+			break;
+		case Hurt:
+			currentHead.x = currentFoot.x + SIZE * cosinus;
+			currentHead.y = currentFoot.y + SIZE * sinus;
+			currentAnchor.x = currentFoot.x + (currentHead.x - currentFoot.x) * 6f/5f;
+			currentAnchor.y = currentFoot.y + (currentFoot.y - currentHead.y) * 4f/5f;
+			ratio = resetAngleTimer.getRemainingRatio();
+			if (ratio >= 0.9f)
+				ratio = 1;
+			cosinus = PApplet.lerp(cosinus, 0, 1f - ratio);
+			sinus = PApplet.lerp(sinus, -1, 1f - ratio);
+			break;
+		case PulledOff:
 			break;
 		}
 	}
 
 	@Override
 	public void display() {
-		// TODO Auto-generated method stub
-		processing.fill(0);
-		processing.stroke(0);
-		processing.strokeWeight(10);
-		processing.line(currentFoot.x, currentFoot.y, -1, currentHead.x, currentHead.y, -1);
+		if(hairState != HairState.PulledOff) {
+			processing.fill(0);
+			processing.noStroke();
+			processing.beginShape();
+			processing.vertex(currentFoot.x, currentFoot.y, -1);
+			processing.bezierVertex(currentFoot.x, currentFoot.y, -1, 
+					currentAnchor.x - THICKNESS, currentAnchor.y, -1, 
+					currentHead.x - THICKNESS, currentHead.y, -1);
+			processing.bezierVertex(currentHead.x + THICKNESS, currentHead.y, -1, 
+					currentAnchor.x + THICKNESS, currentAnchor.y, -1, 
+					currentFoot.x, currentFoot.y, -1);
+			processing.endShape();
+		}
+	}
+	
+	public boolean isHurt() {
+		if(hairState == HairState.Hurt)
+			return true;
+		else
+			return false;
 	}
 
 	@Override
@@ -64,6 +109,7 @@ public class Hair implements GameObject {
 		cosinus = 0;
 		sinus = -1;
 		hairState = HairState.Released;
+		health = 3;
 	}
 
 	public void setCurrentFootX(float _x) {
@@ -71,13 +117,13 @@ public class Hair implements GameObject {
 	}
 
 	public void setCurrentFootY(float _y) {
-		currentFoot.y = _y + 10;
+		currentFoot.y = _y;
 	}
 
 	private void setCurrentHead() {
 		float distance = PApplet.dist(processing.mouseX, processing.mouseY, currentFoot.x, currentFoot.y);
-		
-		if(distance != 0f) {
+
+		if (distance != 0f) {
 			cosinus = (processing.mouseX - currentFoot.x) / distance;
 			sinus = (processing.mouseY - currentFoot.y) / distance;
 		} else {
@@ -87,15 +133,17 @@ public class Hair implements GameObject {
 		currentHead.x = currentFoot.x + SIZE * cosinus;
 		currentHead.y = currentFoot.y + SIZE * sinus;
 	}
-	
+
 	public void grabHair() {
-		hairState = HairState.Grabbed;
-		setCurrentHead();
 	}
-	
+
 	public void releaseHair() {
 		hairState = HairState.Released;
 		resetAngleTimer.reset(RESET_ANGLE_TIME);
+	}
+
+	public void justGrabHair() {
+		hairState = HairState.Grabbed;
 	}
 
 }

@@ -53,13 +53,10 @@ public class Belly implements GameObject {
 		case Released:
 			float remainingTimeRatio = releaseTimer.getRemainingRatio();
 
-			// Compute the y position of the belly's anchor point. TODO: do the same for the x position.
-			anchorPoint.y = ANCHOR_POINT.y + (float) (dropOrigin.y * (1f - remainingTimeRatio)
+			anchorPoint.y = ANCHOR_POINT.y + (float) ((processing.height - dropOrigin.y) * (1f - remainingTimeRatio)
 					* Math.sin(SPEED_BELLY_FACTOR * 90 * (1f - remainingTimeRatio)));
 			
-			
-			//anchorPoint.x = ANCHOR_POINT.x + (float) (dropOrigin.x * (1f - remainingTimeRatio)
-			//		* Math.sin(SPEED_BELLY_FACTOR * 90 * (1f - remainingTimeRatio)));
+			anchorPoint.x = PApplet.lerp(anchorPoint.x, ANCHOR_POINT.x, remainingTimeRatio);
 			
 			// When the timer is finished, we reinitialize the position:
 			if (remainingTimeRatio >= 1f) {
@@ -106,8 +103,8 @@ public class Belly implements GameObject {
 
 	@Override
 	public void init() {
-		LEFT_POINT = new PVector(0, (int) processing.height * 5f / 6f);
-		RIGHT_POINT = new PVector(processing.width, (int) processing.height * 5f / 6f);
+		LEFT_POINT = new PVector(0, (int) processing.height * 9f / 10f);
+		RIGHT_POINT = new PVector(processing.width, (int) processing.height * 9f / 10f);
 		ANCHOR_POINT = new PVector(RIGHT_POINT.x / 2, RIGHT_POINT.y);
 		MID_ANCHOR = new PVector(processing.width / 4, RIGHT_POINT.y);
 
@@ -119,31 +116,36 @@ public class Belly implements GameObject {
 	}
 
 	public void grabBelly() {
-		if (bellyState != BellyState.Released)
-			bellyState = BellyState.Grabbed;
+		//if (bellyState != BellyState.Released)
 	}
 
 	public void releaseBelly() {
-		// Change state and initiate timers
-		bellyState = BellyState.Released;
-		int timer = SPEED_RELEASE_FACTOR;
-		releaseTimer.reset(timer);
-		// Sets the points of the curve
-		dropOrigin.x = anchorPoint.x;
-		dropOrigin.y = anchorPoint.y;
-		// Compute the direction of the belly. TODO: is this really useful? Currently not used.
-		if (anchorPoint.y - ANCHOR_POINT.y < 0 && dropOrigin.y - ANCHOR_POINT.y > 0)
-			factorAnchorPoint.y = -1;
-		else
-			factorAnchorPoint.y = 1;
-		if (anchorPoint.x - ANCHOR_POINT.x < 0 && dropOrigin.x - ANCHOR_POINT.x > 0)
-			factorAnchorPoint.x = -1;
-		else
-			factorAnchorPoint.x = 1;
+		if(bellyState == BellyState.Grabbed) {
+			// Change state and initiate timers
+			bellyState = BellyState.Released;
+			int timer = SPEED_RELEASE_FACTOR;
+			releaseTimer.reset(timer);
+			// Sets the points of the curve
+			dropOrigin.x = anchorPoint.x;
+			dropOrigin.y = anchorPoint.y;
+			// Compute the direction of the belly. TODO: is this really useful? Currently not used.
+			if (anchorPoint.y - ANCHOR_POINT.y < 0 && dropOrigin.y - ANCHOR_POINT.y > 0)
+				factorAnchorPoint.y = -1;
+			else
+				factorAnchorPoint.y = 1;
+			if (anchorPoint.x - ANCHOR_POINT.x < 0 && dropOrigin.x - ANCHOR_POINT.x > 0)
+				factorAnchorPoint.x = -1;
+			else
+				factorAnchorPoint.x = 1;
+		}
 	}
 
 	public PVector getAnchorPoint() {
 		return anchorPoint;
+	}
+
+	public void justGrabBelly() {
+		bellyState = BellyState.Grabbed;
 	}
 
 }

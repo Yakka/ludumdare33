@@ -48,10 +48,20 @@ public class Level implements GameObject {
 		for (Iterator<GameObject> i = gameObjects.iterator(); i.hasNext();)
 			i.next().init();
 	}
+	
+	public void mousePressed() {
+		belly.justGrabBelly();
+		hair.justGrabHair();
+	}
 
 	public void mouseDragged() {
-		belly.grabBelly();
-		hair.grabHair();
+		if(!hair.isHurt()) {
+			belly.grabBelly();
+			hair.grabHair();
+		} else {
+			belly.releaseBelly();
+			hair.grabHair();
+		}
 	}
 
 	public void mouseReleased() {
