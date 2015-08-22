@@ -1,107 +1,41 @@
 package ludumdare33;
 
 import processing.core.PApplet;
-import processing.core.PVector;
 
 public class Level implements GameObject{
 	private PApplet processing;
 	private Timer deltaTimeTimer;
-	private int deltaTime;
-	
-	// ### BELLY LINE ###
-	// Current values
-	private PVector anchorPoint;
-	private PVector leftPoint;
-	private PVector rightPoint;
-	// Initial values
-	private PVector ANCHOR_POINT;
-	private PVector LEFT_POINT;
-	private PVector RIGHT_POINT;
-	// Belly state
-	private enum BellyState {Sleep, Grabbed, Released};
-	private BellyState bellyState = BellyState.Sleep;
-	private Timer releaseTimer;
-	private final int SPEED_RELEASE_FACTOR = 2;
-	private int factorY = 1;
-	private PVector dropOrigin; // The position where the belly is dropped
-	
+	private int deltaTime; //TODO: use the delta time as a statics in Main
+	private Belly belly;
 	
 	public Level(PApplet _processing) {
 		processing = _processing;
 		deltaTimeTimer = new Timer(_processing);
-		releaseTimer = new Timer(_processing);
-		dropOrigin = new PVector();
+		belly = new Belly(processing);
 		init();
 	}
 
 	@Override
 	public void update() {
 		deltaTime = deltaTimeTimer.getDelta();
-		
-		if(bellyState == BellyState.Released) {
-			float toSin = computeCurveY();
-			anchorPoint.y = computeAnchorPointY(toSin);
-			if(anchorPoint.y == ANCHOR_POINT.y)
-				bellyState = BellyState.Sleep;
-		} else if(bellyState == BellyState.Grabbed) {
-			if(anchorPoint.y > ANCHOR_POINT.y) {
-				anchorPoint.y = ANCHOR_POINT.y;
-			}
-		}
+		belly.update();
 	}
 
 	@Override
 	public void display() {
-		processing.fill(50);
-		processing.noStroke();
-		processing.beginShape();
-		processing.vertex(0, (int)processing.height*2f/3f);
-		processing.bezierVertex(leftPoint.x, leftPoint.y, anchorPoint.x, anchorPoint.y, rightPoint.x, rightPoint.y);
-		processing.vertex(processing.width, processing.height);
-		processing.vertex(0, processing.height);
-		processing.endShape();
-
+		belly.display();
 	}
 
 	@Override
 	public void init() {
-		LEFT_POINT = new PVector(0, (int)processing.height*2f/3f);
-		RIGHT_POINT = new PVector(processing.width, (int)processing.height*2f/3f);
-		ANCHOR_POINT = new PVector(RIGHT_POINT.x / 2, RIGHT_POINT.y);
-		
-		leftPoint = new PVector(LEFT_POINT.x, LEFT_POINT.y);
-		rightPoint = new PVector(RIGHT_POINT.x, RIGHT_POINT.y);
-		anchorPoint = new PVector(ANCHOR_POINT.x, ANCHOR_POINT.y);
-		
-		bellyState = BellyState.Sleep;
+		belly.init();
 	}
 	
 	public void mouseDragged() {
-		bellyState = BellyState.Grabbed;
-		anchorPoint.x = processing.mouseX;
-		anchorPoint.y = processing.mouseY;
+		belly.grabBelly();
 	}
 	
 	public void mouseReleased(){
-		bellyState = BellyState.Released;
-		int timer = SPEED_RELEASE_FACTOR * (int) Math.abs(anchorPoint.y - ANCHOR_POINT.y);
-		releaseTimer.reset(timer);
-		dropOrigin.x = anchorPoint.x;
-		dropOrigin.y = anchorPoint.y;
-		float toSin = computeCurveY();
-		anchorPoint.y = computeAnchorPointY(toSin);
-		if(anchorPoint.y - ANCHOR_POINT.y < 0 && dropOrigin.y - ANCHOR_POINT.y > 0)
-			factorY = -1;
-		else
-			factorY = 1;
+		belly.releaseBelly();
 	}
-	
-	private float computeCurveY() {
-		return (float) (Math.sin((float)releaseTimer.getRemainingTime() / 100f));
-	}
-	
-	private float computeAnchorPointY(float _toSin) {
-		return (float) (factorY * (ANCHOR_POINT.y + releaseTimer.getRemainingTime() * Math.sin(_toSin)));
-	}
-
 }
