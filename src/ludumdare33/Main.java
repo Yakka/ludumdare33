@@ -15,7 +15,6 @@ public class Main extends PApplet {
 	}
 
 	public void draw() {
-		background(0, 255, 255);
 		hairsLevel.update();
 		hairsLevel.display();
 	}
