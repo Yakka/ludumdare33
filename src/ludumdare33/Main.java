@@ -25,6 +25,14 @@ public class Main extends PApplet {
 		return true;
 	}
 	
+	public void mouseDragged() {
+		hairsLevel.mouseDragged();
+	}
+	
+	public void mouseReleased() {
+		hairsLevel.mouseReleased();
+	}
+	
 	
 	public static void main(String args[]) {
 		PApplet.main(new String[] {"ludumdare33.Main", "--full-screen --display=0"});

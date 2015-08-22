@@ -38,4 +38,12 @@ public class Timer {
 		currentTime = processing.millis();
 		return delta;
 	}
+	
+	public int getRemainingTime() {
+		currentTime = processing.millis();
+		if (isFinished())
+			return 0;
+		else
+			return goal - currentTime;
+	}
 }
