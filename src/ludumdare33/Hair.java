@@ -6,7 +6,7 @@ import processing.core.PVector;
 public class Hair implements GameObject {
 
 	private PApplet processing;
-	
+
 	// Hair position
 	private PVector currentHead;
 	private PVector currentFoot;
@@ -15,7 +15,7 @@ public class Hair implements GameObject {
 
 	public Hair(PApplet _processing) {
 		processing = _processing;
-		
+
 		currentHead = new PVector();
 		currentFoot = new PVector();
 	}
@@ -41,15 +41,27 @@ public class Hair implements GameObject {
 	public void setCurrentFootX(float _x) {
 		currentFoot.x = _x;
 	}
-	
+
 	public void setCurrentFootY(float _y) {
 		currentFoot.y = _y;
 	}
 
 	private void setCurrentHead() {
-		currentHead.x = currentFoot.x;
-		currentHead.y = currentFoot.y - SIZE;
+
+		float distance = processing.dist(processing.mouseX, processing.mouseY, currentFoot.x, currentFoot.y);
+		float cosinus;
+		float sinus;
+		if(distance != 0f) {
+			cosinus = (processing.mouseX - currentFoot.x) / distance;
+			sinus = (processing.mouseY - currentFoot.y) / distance;
+		} else {
+			cosinus = 0;
+			sinus = -1;
+		}
+		currentHead.x = currentFoot.x + SIZE * cosinus;
+		currentHead.y = currentFoot.y + SIZE * sinus;
+		System.out.println(currentHead);
+
 	}
-	
-	
+
 }

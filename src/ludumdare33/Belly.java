@@ -92,7 +92,6 @@ public class Belly implements GameObject{
 			anchorPoint.x = ANCHOR_POINT.x + MAX_DISTANCE * cosinus;
 			anchorPoint.y = ANCHOR_POINT.y + MAX_DISTANCE * sinus;
 		}
-		
 	}
 	
 	public void releaseBelly() {
