@@ -38,7 +38,7 @@ public class Level implements GameObject {
 
 	@Override
 	public void display() {
-		processing.background(0, 255, 255);
+		processing.background(221, 234, 255);
 		for (Iterator<GameObject> i = gameObjects.iterator(); i.hasNext();)
 			i.next().display();
 		

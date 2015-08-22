@@ -89,10 +89,10 @@ public class Belly implements GameObject {
 
 	@Override
 	public void display() {
-		processing.fill(50);
+		processing.fill(0, 127, 127);
 		processing.noStroke();
 		processing.beginShape();
-		processing.vertex(LEFT_POINT.x, LEFT_POINT.y);
+		processing.vertex(leftPoint.x, leftPoint.y);
 		processing.bezierVertex(leftPoint.x, leftPoint.y, MID_ANCHOR.x, MID_ANCHOR.y, anchorPoint.x, anchorPoint.y);
 		processing.bezierVertex(anchorPoint.x, anchorPoint.y, processing.width - MID_ANCHOR.x, MID_ANCHOR.y,
 				rightPoint.x, rightPoint.y);
@@ -108,6 +108,7 @@ public class Belly implements GameObject {
 		ANCHOR_POINT = new PVector(RIGHT_POINT.x / 2, RIGHT_POINT.y);
 		MID_ANCHOR = new PVector(processing.width / 4, RIGHT_POINT.y);
 
+		// TODO: il est possible de créer des formes différentes pour chacun
 		leftPoint = new PVector(LEFT_POINT.x, LEFT_POINT.y);
 		rightPoint = new PVector(RIGHT_POINT.x, RIGHT_POINT.y);
 		anchorPoint = new PVector(ANCHOR_POINT.x, ANCHOR_POINT.y);
