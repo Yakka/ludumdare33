@@ -58,8 +58,11 @@ public class Hair implements GameObject {
 			setCurrentHead();
 			if(PApplet.dist(currentHead.x, currentHead.y, processing.mouseX, processing.mouseY) > MAX_DIST) {
 				health --;
-				hairState = HairState.Hurt;
-				resetAngleTimer.reset(RESET_ANGLE_TIME);
+				if(health > 0) {
+					hairState = HairState.Hurt;
+					resetAngleTimer.reset(RESET_ANGLE_TIME);
+				} else
+					hairState = HairState.PulledOff;
 			}
 			break;
 		case Hurt:
@@ -74,6 +77,10 @@ public class Hair implements GameObject {
 			sinus = PApplet.lerp(sinus, -1, 1f - ratio);
 			break;
 		case PulledOff:
+			currentHead.x = currentFoot.x + SIZE * cosinus;
+			currentHead.y = currentFoot.y + SIZE * sinus;
+			currentAnchor.x = currentFoot.x + (currentHead.x - currentFoot.x) * 6f/5f;
+			currentAnchor.y = currentFoot.y + (currentFoot.y - currentHead.y) * 4f/5f;
 			break;
 		}
 	}
@@ -113,11 +120,17 @@ public class Hair implements GameObject {
 	}
 
 	public void setCurrentFootX(float _x) {
-		currentFoot.x = _x;
+		if(hairState == HairState.PulledOff)
+			currentFoot.x = processing.mouseX;
+		else
+			currentFoot.x = _x;
 	}
 
 	public void setCurrentFootY(float _y) {
-		currentFoot.y = _y;
+		if(hairState == HairState.PulledOff)
+			currentFoot.y = processing.mouseY;
+		else
+			currentFoot.y = _y;
 	}
 
 	private void setCurrentHead() {
@@ -138,8 +151,10 @@ public class Hair implements GameObject {
 	}
 
 	public void releaseHair() {
-		hairState = HairState.Released;
-		resetAngleTimer.reset(RESET_ANGLE_TIME);
+		if(hairState != HairState.PulledOff) {
+			hairState = HairState.Released;
+			resetAngleTimer.reset(RESET_ANGLE_TIME);
+		}
 	}
 
 	public void justGrabHair() {

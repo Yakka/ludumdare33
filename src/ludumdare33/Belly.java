@@ -10,7 +10,7 @@ public class Belly implements GameObject {
 	private PVector leftPoint;
 	private PVector rightPoint;
 	// Initial values
-	private PVector ANCHOR_POINT;
+	public PVector ANCHOR_POINT;
 	private PVector LEFT_POINT;
 	private PVector RIGHT_POINT;
 

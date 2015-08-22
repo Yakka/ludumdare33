@@ -9,6 +9,10 @@ public class Level implements GameObject {
 	private PApplet processing;
 	private Belly belly;
 	private Hair hair;
+	
+	// Contour
+	private final int MARGIN = 25;
+	private final int THICKNESS = 10;
 
 	private ArrayList<GameObject> gameObjects;
 
@@ -35,10 +39,27 @@ public class Level implements GameObject {
 	@Override
 	public void display() {
 		processing.background(0, 255, 255);
-		
-		
 		for (Iterator<GameObject> i = gameObjects.iterator(); i.hasNext();)
 			i.next().display();
+		
+		processing.fill(255);
+		processing.strokeWeight(5);
+		processing.strokeJoin(processing.MITER);
+		processing.stroke(0);
+		processing.beginShape();
+		// Exterior part of shape, clockwise winding
+		processing.vertex(0, 0);
+		processing.vertex(processing.width, 0);
+		processing.vertex(processing.width, processing.height);
+		processing.vertex(0, processing.height);
+		// Interior part of shape, counter-clockwise winding
+		processing.beginContour();
+		processing.vertex(MARGIN + THICKNESS, MARGIN + THICKNESS);
+		processing.vertex(processing.width - MARGIN - THICKNESS, MARGIN + THICKNESS);
+		processing.vertex(processing.width - MARGIN - THICKNESS, processing.height - MARGIN - THICKNESS);
+		processing.vertex(MARGIN + THICKNESS, processing.height - MARGIN - THICKNESS);
+		processing.endContour();
+		processing.endShape(processing.CLOSE);
 	}
 
 	@Override
@@ -50,6 +71,7 @@ public class Level implements GameObject {
 	}
 	
 	public void mousePressed() {
+		if(PApplet.dist(processing.mouseX, processing.mouseY, belly.ANCHOR_POINT.x, belly.ANCHOR_POINT.y) < 100)
 		belly.justGrabBelly();
 		hair.justGrabHair();
 	}
