@@ -22,12 +22,15 @@ public class Level implements GameObject{
 	private BellyState bellyState = BellyState.Sleep;
 	private Timer releaseTimer;
 	private final int SPEED_RELEASE_FACTOR = 2;
+	private int factorY = 1;
+	private PVector dropOrigin; // The position where the belly is dropped
 	
 	
 	public Level(PApplet _processing) {
 		processing = _processing;
 		deltaTimeTimer = new Timer(_processing);
 		releaseTimer = new Timer(_processing);
+		dropOrigin = new PVector();
 		init();
 	}
 
@@ -36,9 +39,14 @@ public class Level implements GameObject{
 		deltaTime = deltaTimeTimer.getDelta();
 		
 		if(bellyState == BellyState.Released) {
-			anchorPoint.y = (float) (ANCHOR_POINT.y + releaseTimer.getRemainingTime() * Math.sin((float)releaseTimer.getRemainingTime() / 100f));
+			float toSin = computeCurveY();
+			anchorPoint.y = computeAnchorPointY(toSin);
 			if(anchorPoint.y == ANCHOR_POINT.y)
 				bellyState = BellyState.Sleep;
+		} else if(bellyState == BellyState.Grabbed) {
+			if(anchorPoint.y > ANCHOR_POINT.y) {
+				anchorPoint.y = ANCHOR_POINT.y;
+			}
 		}
 	}
 
@@ -78,6 +86,22 @@ public class Level implements GameObject{
 		bellyState = BellyState.Released;
 		int timer = SPEED_RELEASE_FACTOR * (int) Math.abs(anchorPoint.y - ANCHOR_POINT.y);
 		releaseTimer.reset(timer);
+		dropOrigin.x = anchorPoint.x;
+		dropOrigin.y = anchorPoint.y;
+		float toSin = computeCurveY();
+		anchorPoint.y = computeAnchorPointY(toSin);
+		if(anchorPoint.y - ANCHOR_POINT.y < 0 && dropOrigin.y - ANCHOR_POINT.y > 0)
+			factorY = -1;
+		else
+			factorY = 1;
+	}
+	
+	private float computeCurveY() {
+		return (float) (Math.sin((float)releaseTimer.getRemainingTime() / 100f));
+	}
+	
+	private float computeAnchorPointY(float _toSin) {
+		return (float) (factorY * (ANCHOR_POINT.y + releaseTimer.getRemainingTime() * Math.sin(_toSin)));
 	}
 
 }
