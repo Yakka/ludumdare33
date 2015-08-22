@@ -3,20 +3,21 @@ package ludumdare33;
 import processing.core.PApplet;
 
 public class Main extends PApplet {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
+	private Level hairsLevel;
 
 	public void setup() {
 		size(displayWidth, displayHeight, P3D);
+		
+		hairsLevel = new Level(this);
 		
 	}
 
 	public void draw() {
 		background(0, 255, 255);
+		hairsLevel.update();
+		hairsLevel.display();
 	}
 
 	
