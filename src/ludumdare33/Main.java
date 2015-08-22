@@ -7,14 +7,20 @@ public class Main extends PApplet {
 
 	private Level hairsLevel;
 
+	private Timer deltaTimeTimer;
+	static public int deltaTime; // TODO: use the delta time as a statics in Main
+
 	public void setup() {
 		size(displayWidth, displayHeight, P3D);
 		
 		hairsLevel = new Level(this);
 		
+		deltaTimeTimer = new Timer(this);
+		
 	}
 
 	public void draw() {
+		deltaTime = deltaTimeTimer.getDelta();
 		hairsLevel.update();
 		hairsLevel.display();
 	}

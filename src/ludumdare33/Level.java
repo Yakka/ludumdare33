@@ -1,15 +1,12 @@
 package ludumdare33;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Iterator;
 
 import processing.core.PApplet;
 
 public class Level implements GameObject {
 	private PApplet processing;
-	private Timer deltaTimeTimer;
-	private int deltaTime; // TODO: use the delta time as a statics in Main
 	private Belly belly;
 	private Hair hair;
 
@@ -17,7 +14,6 @@ public class Level implements GameObject {
 
 	public Level(PApplet _processing) {
 		processing = _processing;
-		deltaTimeTimer = new Timer(_processing);
 		// Create elements from the level
 		belly = new Belly(processing);
 		hair = new Hair(processing);
@@ -30,7 +26,6 @@ public class Level implements GameObject {
 
 	@Override
 	public void update() {
-		deltaTime = deltaTimeTimer.getDelta();
 		hair.setCurrentFootX(belly.getAnchorPoint().x);
 		hair.setCurrentFootY(belly.getAnchorPoint().y);
 		for (Iterator<GameObject> i = gameObjects.iterator(); i.hasNext();)
@@ -56,9 +51,11 @@ public class Level implements GameObject {
 
 	public void mouseDragged() {
 		belly.grabBelly();
+		hair.grabHair();
 	}
 
 	public void mouseReleased() {
 		belly.releaseBelly();
+		hair.releaseHair();
 	}
 }

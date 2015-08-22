@@ -58,7 +58,7 @@ public class Belly implements GameObject{
 		processing.fill(50);
 		processing.noStroke();
 		processing.beginShape();
-		processing.vertex(0, (int)processing.height * 2f/3f);
+		processing.vertex(LEFT_POINT.x, LEFT_POINT.y);
 		processing.bezierVertex(leftPoint.x, leftPoint.y, MID_ANCHOR.x, MID_ANCHOR.y, anchorPoint.x, anchorPoint.y);
 		processing.bezierVertex(anchorPoint.x, anchorPoint.y, processing.width - MID_ANCHOR.x, MID_ANCHOR.y, rightPoint.x, rightPoint.y);
 		processing.vertex(processing.width, processing.height);
@@ -68,8 +68,8 @@ public class Belly implements GameObject{
 
 	@Override
 	public void init() {
-		LEFT_POINT = new PVector(0, (int)processing.height*2f/3f);
-		RIGHT_POINT = new PVector(processing.width, (int)processing.height*2f/3f);
+		LEFT_POINT = new PVector(0, (int)processing.height*5f/6f);
+		RIGHT_POINT = new PVector(processing.width, (int)processing.height*5f/6f);
 		ANCHOR_POINT = new PVector(RIGHT_POINT.x / 2, RIGHT_POINT.y);
 		MID_ANCHOR = new PVector(processing.width / 4, RIGHT_POINT.y);
 		
@@ -82,7 +82,7 @@ public class Belly implements GameObject{
 	
 	public void grabBelly() {
 		bellyState = BellyState.Grabbed;
-		float distance = processing.dist(processing.mouseX, processing.mouseY, ANCHOR_POINT.x, ANCHOR_POINT.y);
+		float distance = PApplet.dist(processing.mouseX, processing.mouseY, ANCHOR_POINT.x, ANCHOR_POINT.y);
 		if( distance < MAX_DISTANCE) {
 			anchorPoint.x = processing.mouseX;
 			anchorPoint.y = processing.mouseY;

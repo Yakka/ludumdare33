@@ -46,4 +46,11 @@ public class Timer {
 		else
 			return goal - currentTime;
 	}
+	
+	public float getRemainingRatio() {
+		currentTime = processing.millis();
+		if(goal != 0)
+			return (float) currentTime / (float) goal;
+		else return -1;
+	}
 }
