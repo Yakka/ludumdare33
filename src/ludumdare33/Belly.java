@@ -22,6 +22,7 @@ public class Belly implements GameObject{
 		private final float SPEED_BELLY_FACTOR = 0.001f; // The speed of the belly's rebound
 		private PVector factorAnchorPoint; // Correct the direction of the belly
 		private PVector dropOrigin; // The position where the belly is dropped
+		private final float MAX_DISTANCE = 300f; // The maximum distance when grabbed
 	
 	public Belly(PApplet _processing) {
 		releaseTimer = new Timer(_processing);
@@ -58,8 +59,8 @@ public class Belly implements GameObject{
 		processing.noStroke();
 		processing.beginShape();
 		processing.vertex(0, (int)processing.height * 2f/3f);
-		processing.bezierVertex(leftPoint.x, leftPoint.y, anchorPoint.x - MID_ANCHOR.x, MID_ANCHOR.y, anchorPoint.x, anchorPoint.y);
-		processing.bezierVertex(anchorPoint.x, anchorPoint.y, anchorPoint.x + MID_ANCHOR.x, MID_ANCHOR.y, rightPoint.x, rightPoint.y);
+		processing.bezierVertex(leftPoint.x, leftPoint.y, MID_ANCHOR.x, MID_ANCHOR.y, anchorPoint.x, anchorPoint.y);
+		processing.bezierVertex(anchorPoint.x, anchorPoint.y, processing.width - MID_ANCHOR.x, MID_ANCHOR.y, rightPoint.x, rightPoint.y);
 		processing.vertex(processing.width, processing.height);
 		processing.vertex(0, processing.height);
 		processing.endShape();
@@ -81,8 +82,17 @@ public class Belly implements GameObject{
 	
 	public void grabBelly() {
 		bellyState = BellyState.Grabbed;
-		anchorPoint.x = processing.mouseX;
-		anchorPoint.y = processing.mouseY;
+		float distance = processing.dist(processing.mouseX, processing.mouseY, ANCHOR_POINT.x, ANCHOR_POINT.y);
+		if( distance < MAX_DISTANCE) {
+			anchorPoint.x = processing.mouseX;
+			anchorPoint.y = processing.mouseY;
+		} else {
+			float cosinus = (processing.mouseX - ANCHOR_POINT.x) / distance;
+			float sinus = (processing.mouseY - ANCHOR_POINT.y) / distance;
+			anchorPoint.x = ANCHOR_POINT.x + MAX_DISTANCE * cosinus;
+			anchorPoint.y = ANCHOR_POINT.y + MAX_DISTANCE * sinus;
+		}
+		
 	}
 	
 	public void releaseBelly() {

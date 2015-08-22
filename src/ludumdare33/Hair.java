@@ -31,21 +31,24 @@ public class Hair implements GameObject {
 		processing.fill(0);
 		processing.stroke(0);
 		processing.strokeWeight(10);
-		processing.line(currentFoot.x, processing.height, -1, currentHead.x, currentHead.y, -1);
+		processing.line(currentFoot.x, currentFoot.y, -1, currentHead.x, currentHead.y, -1);
 	}
 
 	@Override
 	public void init() {
 	}
 
-	public void setCurrentFoot(PVector _vec) {
-		currentFoot.x = _vec.x;
-		currentFoot.y = _vec.y;
+	public void setCurrentFootX(float _x) {
+		currentFoot.x = _x;
+	}
+	
+	public void setCurrentFootY(float _y) {
+		currentFoot.y = _y;
 	}
 
 	private void setCurrentHead() {
 		currentHead.x = currentFoot.x;
-		currentHead.y = 500;
+		currentHead.y = currentFoot.y - SIZE;
 	}
 	
 	

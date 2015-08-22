@@ -31,6 +31,8 @@ public class Level implements GameObject {
 	@Override
 	public void update() {
 		deltaTime = deltaTimeTimer.getDelta();
+		hair.setCurrentFootX(belly.getAnchorPoint().x);
+		hair.setCurrentFootY(belly.getAnchorPoint().y);
 		for (Iterator<GameObject> i = gameObjects.iterator(); i.hasNext();)
 			i.next().update();
 	}
@@ -46,7 +48,8 @@ public class Level implements GameObject {
 
 	@Override
 	public void init() {
-		hair.setCurrentFoot(belly.getAnchorPoint());
+		hair.setCurrentFootX(belly.getAnchorPoint().x);
+		hair.setCurrentFootY(belly.getAnchorPoint().y);
 		for (Iterator<GameObject> i = gameObjects.iterator(); i.hasNext();)
 			i.next().init();
 	}
