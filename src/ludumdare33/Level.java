@@ -14,9 +14,8 @@ public class Level implements GameObject {
 	private Cursor cursor;
 	// Contour
 	private final int MARGIN = 2;
-	private final int THICKNESS = 0;
-	private PVector topLeft;
-	private PVector bottomRight;
+	public PVector topLeft;
+	public PVector bottomRight;
 
 	private ArrayList<GameObject> gameObjects;
 
