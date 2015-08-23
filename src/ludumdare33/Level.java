@@ -32,7 +32,6 @@ public class Level implements GameObject {
 
 	@Override
 	public void update() {
-		processing.noCursor();
 		hair.setCurrentFootX(belly.getAnchorPoint().x);
 		hair.setCurrentFootY(belly.getAnchorPoint().y);
 		for (Iterator<GameObject> i = gameObjects.iterator(); i.hasNext();)

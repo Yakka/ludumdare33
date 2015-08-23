@@ -1,7 +1,6 @@
 package ludumdare33;
 
 import ddf.minim.AudioPlayer;
-import ddf.minim.Minim;
 import processing.core.PApplet;
 import processing.core.PVector;
 
@@ -27,7 +26,7 @@ public class Hair implements GameObject {
 	float sinus = 0;
 
 	// Hair state
-	private final float MAX_DIST = 50f;
+	private final float MAX_DIST = 150f;
 	private int health;
 	private enum HairState {
 		Released, Grabbed, Hurt, PulledOff
@@ -67,8 +66,21 @@ public class Hair implements GameObject {
 			sinus = PApplet.lerp(sinus, -1, 1f - ratio);
 			break;
 		case Grabbed:
-			setCurrentHead();
-			if(PApplet.dist(currentHead.x, currentHead.y, processing.mouseX, processing.mouseY) > MAX_DIST) {
+			float distance = PApplet.dist(processing.mouseX, processing.mouseY, currentFoot.x, currentFoot.y);
+
+			if (distance >= 1f) {
+				float newcos = (processing.mouseX - currentFoot.x) / distance;
+				float newsin = (processing.mouseY - currentFoot.y) / distance;
+				cosinus = PApplet.lerp(newcos, cosinus, 0.1f);
+				sinus = PApplet.lerp(newsin, sinus, 0.1f);
+			} else {
+				cosinus = PApplet.lerp(cosinus, 0, 0.1f);
+				sinus = PApplet.lerp(sinus, -1, 0.1f);;
+			}
+			currentHead.x = currentFoot.x + SIZE * cosinus;
+			currentHead.y = currentFoot.y + SIZE * sinus;
+			if(distance > MAX_DIST) {
+				System.out.println(distance);
 				health --;
 				if(health > 0) {
 					hairState = HairState.Hurt;
@@ -108,15 +120,19 @@ public class Hair implements GameObject {
 			processing.fill(0, 255*(1-hairDeathTimer.getRemainingRatio()));
 		else
 			processing.fill(0);
+		
 		processing.noStroke();
 		processing.beginShape();
-		processing.vertex(currentFoot.x, currentFoot.y, -1);
-		processing.bezierVertex(currentFoot.x, currentFoot.y, -1, 
-				currentAnchor.x - THICKNESS, currentAnchor.y, -1, 
-				currentHead.x - THICKNESS, currentHead.y, -1);
-		processing.bezierVertex(currentHead.x + THICKNESS, currentHead.y, -1, 
-				currentAnchor.x + THICKNESS, currentAnchor.y, -1, 
-				currentFoot.x, currentFoot.y, -1);
+		// hair
+		processing.vertex(currentFoot.x - THICKNESS, currentFoot.y, -1);
+		processing.vertex(currentHead.x - THICKNESS, currentHead.y, -1);
+		processing.vertex(currentHead.x + THICKNESS, currentHead.y, -1);
+		processing.vertex(currentFoot.x + THICKNESS, currentFoot.y, -1);
+		// root
+		processing.vertex(currentFoot.x + 2 * THICKNESS, currentFoot.y + THICKNESS, -1);
+		processing.vertex(currentFoot.x + THICKNESS, currentFoot.y + 3 * THICKNESS, -1);
+		processing.vertex(currentFoot.x, currentFoot.y + 3 * THICKNESS, -1);
+		processing.vertex(currentFoot.x - 2 * THICKNESS, currentFoot.y + THICKNESS, -1);
 		processing.endShape();
 			
 	}
@@ -157,20 +173,6 @@ public class Hair implements GameObject {
 			currentFoot.y = processing.mouseY;
 		else
 			currentFoot.y = _y;
-	}
-
-	private void setCurrentHead() {
-		float distance = PApplet.dist(processing.mouseX, processing.mouseY, currentFoot.x, currentFoot.y);
-
-		if (distance != 0f) {
-			cosinus = (processing.mouseX - currentFoot.x) / distance;
-			sinus = (processing.mouseY - currentFoot.y) / distance;
-		} else {
-			cosinus = 0;
-			sinus = -1;
-		}
-		currentHead.x = currentFoot.x + SIZE * cosinus;
-		currentHead.y = currentFoot.y + SIZE * sinus;
 	}
 
 	public void grabHair() {

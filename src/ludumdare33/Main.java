@@ -15,6 +15,8 @@ public class Main extends PApplet {
 
 	public void setup() {
 		size(displayWidth, displayHeight, P3D);
+
+		noCursor();
 		
 		minim = new Minim(this);
 		
