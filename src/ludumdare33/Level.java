@@ -27,9 +27,9 @@ public class Level implements GameObject {
 		hair = new Hair(processing);
 		cursor = new Cursor(processing);
 		belly = new Belly(processing, hair, cursor, 
-				new PVector(topLeft.x, (int) bottomRight.y * 9f / 10f),
-				new PVector(bottomRight.x / 2, (int) bottomRight.y * 9f / 10f),
-				new PVector(bottomRight.x, (int) bottomRight.y * 9f / 10f),
+				new PVector(topLeft.x, bottomRight.y * 9f / 10f),
+				new PVector(topLeft.x + (bottomRight.x - topLeft.x) / 2, bottomRight.y * 9f / 10f),
+				new PVector(bottomRight.x, bottomRight.y * 9f / 10f),
 				bottomRight);
 		gameObjects = new ArrayList<GameObject>();
 		gameObjects.add(hair);

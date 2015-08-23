@@ -59,10 +59,10 @@ public class Cursor implements GameObject {
 	public void display() {
 		processing.beginShape();
 		processing.texture(cursors[index]);
-		processing.vertex(position.x - SIZE / 2, position.y - SIZE / 2, 3, 0, 0);
-		processing.vertex(position.x + SIZE / 2, position.y - SIZE / 2, 3, SIZE, 0);
-		processing.vertex(position.x + SIZE / 2, position.y + SIZE / 2, 3, SIZE, SIZE);
-		processing.vertex(position.x - SIZE / 2, position.y + SIZE / 2, 3, 0, SIZE);
+		processing.vertex(position.x - SIZE / 2, position.y - SIZE / 2, 10, 0, 0);
+		processing.vertex(position.x + SIZE / 2, position.y - SIZE / 2, 10, SIZE, 0);
+		processing.vertex(position.x + SIZE / 2, position.y + SIZE / 2, 10, SIZE, SIZE);
+		processing.vertex(position.x - SIZE / 2, position.y + SIZE / 2, 10, 0, SIZE);
 		processing.endShape();
 	}
 

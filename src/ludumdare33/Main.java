@@ -15,14 +15,18 @@ public class Main extends PApplet {
 	private PVector[] bottomRights;
 	private Level[] levels;
 	
-	private final int NB_OF_LEVELS = 1;
+	private final int NB_OF_LEVELS = 4;
+	
+	//Layout
+	private final int MARGIN = 10;
+	private final int UNIT = 50;
 
 	private Timer deltaTimeTimer;
 	static public int deltaTime; // TODO: use the delta time as a statics in Main
 
 	public void setup() {
 		size(displayWidth, displayHeight, P3D);
-
+		ortho();
 		noCursor();
 		
 		minim = new Minim(this);
@@ -30,8 +34,17 @@ public class Main extends PApplet {
 		topLefts = new PVector[NB_OF_LEVELS];
 		bottomRights = new PVector[NB_OF_LEVELS];
 		
-		topLefts[0] = new PVector(50, 50);
-		bottomRights[0] = new PVector(width / 3, height / 3);
+		topLefts[0] = new PVector(MARGIN, MARGIN);
+		bottomRights[0] = new PVector(width * 10 / UNIT, height * 16 / UNIT);
+		
+		topLefts[1] = new PVector(width * 11 / UNIT, MARGIN);
+		bottomRights[1] = new PVector(width * 21 / UNIT, height * 33 / UNIT);
+		
+		topLefts[2] = new PVector(MARGIN, height * 17 / UNIT);
+		bottomRights[2] = new PVector(width * 10 / UNIT, height * 33 / UNIT);
+		
+		topLefts[3] = new PVector(MARGIN, height * 34 / UNIT);
+		bottomRights[3] = new PVector(width * 21 / UNIT, height * 49 / UNIT);
 		
 		for(int i = 0; i < levels.length; i++) {
 			levels[i] = new Level(this, topLefts[i], bottomRights[i]);
@@ -59,10 +72,10 @@ public class Main extends PApplet {
 		// Interior part of shape, counter-clockwise winding
 		for(int i = 0; i < levels.length; i++) {
 			beginContour();
-			vertex(levels[i].topLeft.x, levels[i].topLeft.y);
-			vertex(levels[i].bottomRight.x, levels[i].topLeft.y);
-			vertex(levels[i].bottomRight.x, levels[i].bottomRight.y);
-			vertex(levels[i].topLeft.x, levels[i].bottomRight.y);
+			vertex(levels[i].topLeft.x, levels[i].topLeft.y, 5);
+			vertex(levels[i].bottomRight.x, levels[i].topLeft.y, 5);
+			vertex(levels[i].bottomRight.x, levels[i].bottomRight.y, 5);
+			vertex(levels[i].topLeft.x, levels[i].bottomRight.y, 5);
 			endContour();
 		}
 		endShape(PConstants.CLOSE);
