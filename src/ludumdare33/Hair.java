@@ -26,8 +26,9 @@ public class Hair implements GameObject {
 	private enum HairState {
 		Released, Grabbed, Hurt, PulledOff
 	};
-
 	private HairState hairState;
+	private Timer hairDeathTimer;
+	private final int HAIR_DEATH_TIME = 1000;
 
 	public Hair(PApplet _processing) {
 		processing = _processing;
@@ -37,6 +38,7 @@ public class Hair implements GameObject {
 		currentAnchor = new PVector();
 
 		resetAngleTimer = new Timer(processing);
+		hairDeathTimer = new Timer(processing);
 	}
 
 	@Override
@@ -61,8 +63,10 @@ public class Hair implements GameObject {
 				if(health > 0) {
 					hairState = HairState.Hurt;
 					resetAngleTimer.reset(RESET_ANGLE_TIME);
-				} else
+				} else {
 					hairState = HairState.PulledOff;
+					hairDeathTimer.reset(HAIR_DEATH_TIME);
+				}
 			}
 			break;
 		case Hurt:
@@ -87,7 +91,10 @@ public class Hair implements GameObject {
 
 	@Override
 	public void display() {
-		processing.fill(0);
+		if(hairState == HairState.PulledOff)
+			processing.fill(0, 255*(1-hairDeathTimer.getRemainingRatio()));
+		else
+			processing.fill(0);
 		processing.noStroke();
 		processing.beginShape();
 		processing.vertex(currentFoot.x, currentFoot.y, -1);

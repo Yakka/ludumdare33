@@ -14,6 +14,9 @@ public class Belly implements GameObject {
 	private PVector LEFT_POINT;
 	private PVector RIGHT_POINT;
 
+	// Cursor
+	private Cursor cursor;
+	
 	// Belly state
 	private enum BellyState {
 		Sleep, Grabbed, Released
@@ -41,12 +44,13 @@ public class Belly implements GameObject {
 
 	private Hair hair;
 	
-	public Belly(PApplet _processing, Hair _hair) {
+	public Belly(PApplet _processing, Hair _hair, Cursor _cursor) {
 		releaseTimer = new Timer(_processing);
 		dropOrigin = new PVector();
 		factorAnchorPoint = new PVector();
 		processing = _processing;
 		hair = _hair;
+		cursor = _cursor;
 		init();
 	}
 
@@ -54,6 +58,7 @@ public class Belly implements GameObject {
 	public void update() {
 		switch (bellyState) {
 		case Released:
+			cursor.setBlocked(false);
 			float remainingTimeRatio = releaseTimer.getRemainingRatio();
 
 			anchorPoint.y = ANCHOR_POINT.y + (float) ((processing.height - dropOrigin.y) * (1f - remainingTimeRatio)
@@ -75,11 +80,16 @@ public class Belly implements GameObject {
 			if (distance < MAX_DISTANCE) {
 				anchorPoint.x = processing.mouseX;
 				anchorPoint.y = processing.mouseY;
-			} else {
+				
+				cursor.setBlocked(false);
+			} else { // too far for the belly
 				float cosinus = (processing.mouseX - ANCHOR_POINT.x) / distance;
 				float sinus = (processing.mouseY - ANCHOR_POINT.y) / distance;
 				anchorPoint.x = ANCHOR_POINT.x + MAX_DISTANCE * cosinus;
 				anchorPoint.y = ANCHOR_POINT.y + MAX_DISTANCE * sinus;
+				
+				cursor.setBlocked(true);
+				cursor.setPosition(anchorPoint.x, anchorPoint.y);
 			}
 			if (anchorPoint.y > ANCHOR_POINT.y) {
 				anchorPoint.y = ANCHOR_POINT.y;
@@ -147,13 +157,17 @@ public class Belly implements GameObject {
 				factorAnchorPoint.x = 1;
 		}
 	}
+	
+	public boolean isGrabbable() {
+		return PApplet.dist(processing.mouseX, processing.mouseY, ANCHOR_POINT.x, ANCHOR_POINT.y) < 100;
+	}
 
 	public PVector getAnchorPoint() {
 		return anchorPoint;
 	}
 
 	public void justGrabBelly() {
-		if(PApplet.dist(processing.mouseX, processing.mouseY, ANCHOR_POINT.x, ANCHOR_POINT.y) < 100) {
+		if(isGrabbable()) {
 			bellyState = BellyState.Grabbed;
 			hair.justGrabHair();
 		}

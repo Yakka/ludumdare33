@@ -9,8 +9,6 @@ public class Main extends PApplet {
 
 	private Timer deltaTimeTimer;
 	static public int deltaTime; // TODO: use the delta time as a statics in Main
-	
-	public static boolean click = false;
 
 	public void setup() {
 		size(displayWidth, displayHeight, P3D);
@@ -41,8 +39,11 @@ public class Main extends PApplet {
 	}
 	
 	public void mouseReleased() {
-		click = false;
 		hairsLevel.mouseReleased();
+	}
+	
+	public void mouseMoved() {
+		hairsLevel.mouseMoved();
 	}
 	
 	

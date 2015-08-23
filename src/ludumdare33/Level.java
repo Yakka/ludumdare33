@@ -10,7 +10,7 @@ public class Level implements GameObject {
 	private PApplet processing;
 	private Belly belly;
 	private Hair hair;
-	
+	private Cursor cursor;
 	// Contour
 	private final int MARGIN = 25;
 	private final int THICKNESS = 10;
@@ -21,16 +21,18 @@ public class Level implements GameObject {
 		processing = _processing;
 		// Create elements from the level
 		hair = new Hair(processing);
-		belly = new Belly(processing, hair);
+		cursor = new Cursor(processing);
+		belly = new Belly(processing, hair, cursor);
 		gameObjects = new ArrayList<GameObject>();
 		gameObjects.add(hair);
 		gameObjects.add(belly);
-
+		gameObjects.add(cursor);
 		init();
 	}
 
 	@Override
 	public void update() {
+		processing.noCursor();
 		hair.setCurrentFootX(belly.getAnchorPoint().x);
 		hair.setCurrentFootY(belly.getAnchorPoint().y);
 		for (Iterator<GameObject> i = gameObjects.iterator(); i.hasNext();)
@@ -73,13 +75,27 @@ public class Level implements GameObject {
 	
 	public void mousePressed() {
 		belly.justGrabBelly();
+		if(belly.isGrabbable())
+			cursor.setGrabbingCursor();
+		else
+			cursor.setGrabbingCursor();
+		belly.grabBelly();
 	}
 
 	public void mouseDragged() {
+		cursor.setGrabbingCursor();
 		belly.grabBelly();
 	}
 
 	public void mouseReleased() {
 		belly.releaseBelly();
+		cursor.setBasicCursor();
+	}
+	
+	public void mouseMoved() {
+		if(belly.isGrabbable())
+			cursor.setGrabbableCursor();
+		else
+			cursor.setBasicCursor();
 	}
 }
