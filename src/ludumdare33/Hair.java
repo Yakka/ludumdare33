@@ -25,6 +25,7 @@ public class Hair implements GameObject {
 	float cosinus = 0;
 	float sinus = 0;
 
+	private float z = Belly.UNGRABBED_Z;
 	// Hair state
 	private final float MAX_DIST = 150f;
 	private int health;
@@ -124,15 +125,15 @@ public class Hair implements GameObject {
 		processing.noStroke();
 		processing.beginShape();
 		// hair
-		processing.vertex(currentFoot.x - THICKNESS, currentFoot.y, -1);
-		processing.vertex(currentHead.x - THICKNESS, currentHead.y, -1);
-		processing.vertex(currentHead.x + THICKNESS, currentHead.y, -1);
-		processing.vertex(currentFoot.x + THICKNESS, currentFoot.y, -1);
+		processing.vertex(currentFoot.x - THICKNESS, currentFoot.y, z - 1);
+		processing.vertex(currentHead.x - THICKNESS, currentHead.y, z -1);
+		processing.vertex(currentHead.x + THICKNESS, currentHead.y, z -1);
+		processing.vertex(currentFoot.x + THICKNESS, currentFoot.y, z -1);
 		// root
-		processing.vertex(currentFoot.x + 2 * THICKNESS, currentFoot.y + THICKNESS, -1);
-		processing.vertex(currentFoot.x + THICKNESS, currentFoot.y + 3 * THICKNESS, -1);
-		processing.vertex(currentFoot.x, currentFoot.y + 3 * THICKNESS, -1);
-		processing.vertex(currentFoot.x - 2 * THICKNESS, currentFoot.y + THICKNESS, -1);
+		processing.vertex(currentFoot.x + 2 * THICKNESS, currentFoot.y + THICKNESS, z -1);
+		processing.vertex(currentFoot.x + THICKNESS, currentFoot.y + 3 * THICKNESS, z -1);
+		processing.vertex(currentFoot.x, currentFoot.y + 3 * THICKNESS, z -1);
+		processing.vertex(currentFoot.x - 2 * THICKNESS, currentFoot.y + THICKNESS, z -1);
 		processing.endShape();
 			
 	}
@@ -159,6 +160,7 @@ public class Hair implements GameObject {
 		sinus = -1;
 		hairState = HairState.Released;
 		health = 1;
+		z = Belly.UNGRABBED_Z;
 	}
 
 	public void setCurrentFootX(float _x) {
@@ -177,6 +179,10 @@ public class Hair implements GameObject {
 
 	public void grabHair() {
 	}
+	
+	public void resetZ() {
+		z = Belly.UNGRABBED_Z;
+	}
 
 	public void releaseHair() {
 		if(hairState != HairState.PulledOff) {
@@ -187,6 +193,7 @@ public class Hair implements GameObject {
 
 	public void justGrabHair() {
 		if(hairState != HairState.PulledOff) {
+			z = Belly.GRABBED_Z;
 			hairState = HairState.Grabbed;
 			gniiiAudio.loop();
 		}

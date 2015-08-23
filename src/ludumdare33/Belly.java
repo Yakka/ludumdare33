@@ -15,6 +15,11 @@ public class Belly implements GameObject {
 	private PVector RIGHT_POINT;
 	private PVector BOTTOM_RIGHT;
 
+	// Z buffer
+	private float z = UNGRABBED_Z;
+	public static final float GRABBED_Z = -3f;
+	public static final float UNGRABBED_Z = 0f;
+	
 	// Cursor
 	private Cursor cursor;
 	
@@ -101,6 +106,10 @@ public class Belly implements GameObject {
 				anchorPoint.y = ANCHOR_POINT.y;
 			}
 			break;
+		case Sleep:
+			z = UNGRABBED_Z;
+			hair.resetZ();
+			break;
 		default:
 			break;
 		}
@@ -111,12 +120,15 @@ public class Belly implements GameObject {
 		processing.fill(0, 127, 127);
 		processing.noStroke();
 		processing.beginShape();
-		processing.vertex(leftPoint.x, leftPoint.y);
-		processing.bezierVertex(leftPoint.x, leftPoint.y, leftPoint.x + (anchorPoint.x - leftPoint.x) / 2, leftPoint.y, anchorPoint.x, anchorPoint.y);
-		processing.bezierVertex(anchorPoint.x, anchorPoint.y, rightPoint.x - (anchorPoint.x - leftPoint.x) / 2, leftPoint.y,
-				rightPoint.x, rightPoint.y);
-		processing.vertex(BOTTOM_RIGHT.x, BOTTOM_RIGHT.y);
-		processing.vertex(leftPoint.x, BOTTOM_RIGHT.y);
+		processing.vertex(leftPoint.x, leftPoint.y, z);
+		processing.bezierVertex(leftPoint.x, leftPoint.y, z,
+				leftPoint.x + (anchorPoint.x - leftPoint.x) / 2, leftPoint.y, z,
+				anchorPoint.x, anchorPoint.y, z);
+		processing.bezierVertex(anchorPoint.x, anchorPoint.y, z, 
+				rightPoint.x - (anchorPoint.x - leftPoint.x) / 2, leftPoint.y, z,
+				rightPoint.x, rightPoint.y, z);
+		processing.vertex(BOTTOM_RIGHT.x, BOTTOM_RIGHT.y, z);
+		processing.vertex(leftPoint.x, BOTTOM_RIGHT.y, z);
 		processing.endShape();
 	}
 
@@ -126,7 +138,7 @@ public class Belly implements GameObject {
 		leftPoint = new PVector(LEFT_POINT.x, LEFT_POINT.y);
 		rightPoint = new PVector(RIGHT_POINT.x, RIGHT_POINT.y);
 		anchorPoint = new PVector(ANCHOR_POINT.x, ANCHOR_POINT.y);
-
+		z = UNGRABBED_Z;
 		bellyState = BellyState.Sleep;
 	}
 
@@ -159,6 +171,10 @@ public class Belly implements GameObject {
 		}
 	}
 	
+	public boolean isSleeping() {
+		return bellyState == BellyState.Sleep;
+	}
+	
 	public boolean isGrabbable() {
 		return PApplet.dist(processing.mouseX, processing.mouseY, ANCHOR_POINT.x, ANCHOR_POINT.y) < 100;
 	}
@@ -170,6 +186,7 @@ public class Belly implements GameObject {
 	public void justGrabBelly() {
 		if(isGrabbable()) {
 			bellyState = BellyState.Grabbed;
+			z = GRABBED_Z;
 			hair.justGrabHair();
 		}
 	}

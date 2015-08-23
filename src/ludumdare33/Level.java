@@ -48,14 +48,20 @@ public class Level implements GameObject {
 
 	@Override
 	public void display() {
+		float z;
+		if(!belly.isSleeping())
+			z = Belly.GRABBED_Z;
+		else
+			z = Belly.UNGRABBED_Z;
+		
 		processing.fill(221, 234, 255);
 		processing.noStroke();
 		processing.beginShape();
-		// Exterior part of shape, clockwise winding
-		processing.vertex(topLeft.x, topLeft.y, -5);
-		processing.vertex(bottomRight.x, topLeft.y, -5);
-		processing.vertex(bottomRight.x, bottomRight.y, -5);
-		processing.vertex(topLeft.x, bottomRight.y, -5);
+		// Background
+		processing.vertex(topLeft.x, topLeft.y, z - 2);
+		processing.vertex(bottomRight.x, topLeft.y, z - 2);
+		processing.vertex(bottomRight.x, bottomRight.y, z - 2);
+		processing.vertex(topLeft.x, bottomRight.y, z - 2);
 		processing.endShape();
 		for (Iterator<GameObject> i = gameObjects.iterator(); i.hasNext();)
 			i.next().display();
