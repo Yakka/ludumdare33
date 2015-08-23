@@ -2,6 +2,7 @@ package ludumdare33;
 
 import ddf.minim.Minim;
 import processing.core.PApplet;
+import processing.core.PVector;
 
 public class Main extends PApplet {
 	private static final long serialVersionUID = 1L;
@@ -20,7 +21,7 @@ public class Main extends PApplet {
 		
 		minim = new Minim(this);
 		
-		hairsLevel = new Level(this);
+		hairsLevel = new Level(this, new PVector(50, 50), new PVector(width / 3, height / 3));
 		
 		deltaTimeTimer = new Timer(this);
 		
@@ -28,6 +29,7 @@ public class Main extends PApplet {
 
 	public void draw() {
 		deltaTime = deltaTimeTimer.getDelta();
+		background(255);
 		hairsLevel.update();
 		hairsLevel.display();
 	}

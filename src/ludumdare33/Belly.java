@@ -13,6 +13,7 @@ public class Belly implements GameObject {
 	public PVector ANCHOR_POINT;
 	private PVector LEFT_POINT;
 	private PVector RIGHT_POINT;
+	private PVector BOTTOM_RIGHT;
 
 	// Cursor
 	private Cursor cursor;
@@ -44,13 +45,20 @@ public class Belly implements GameObject {
 
 	private Hair hair;
 	
-	public Belly(PApplet _processing, Hair _hair, Cursor _cursor) {
+	public Belly(PApplet _processing, Hair _hair, Cursor _cursor, PVector _leftBorder, PVector _anchorPoint, PVector _rightBorder, PVector _bottomRight) {
 		releaseTimer = new Timer(_processing);
 		dropOrigin = new PVector();
 		factorAnchorPoint = new PVector();
 		processing = _processing;
 		hair = _hair;
 		cursor = _cursor;
+		
+		LEFT_POINT = new PVector(_leftBorder.x, _leftBorder.y);
+		RIGHT_POINT = new PVector(_rightBorder.x, _rightBorder.y);
+		ANCHOR_POINT = new PVector(_anchorPoint.x, _anchorPoint.y);
+		MID_ANCHOR = new PVector((LEFT_POINT.x + ANCHOR_POINT.x) / 2, (LEFT_POINT.y + ANCHOR_POINT.y) / 2);
+		BOTTOM_RIGHT = new PVector(_bottomRight.x, _bottomRight.y);
+		
 		init();
 	}
 
@@ -107,20 +115,15 @@ public class Belly implements GameObject {
 		processing.beginShape();
 		processing.vertex(leftPoint.x, leftPoint.y);
 		processing.bezierVertex(leftPoint.x, leftPoint.y, MID_ANCHOR.x, MID_ANCHOR.y, anchorPoint.x, anchorPoint.y);
-		processing.bezierVertex(anchorPoint.x, anchorPoint.y, processing.width - MID_ANCHOR.x, MID_ANCHOR.y,
+		processing.bezierVertex(anchorPoint.x, anchorPoint.y, rightPoint.x - MID_ANCHOR.x, MID_ANCHOR.y,
 				rightPoint.x, rightPoint.y);
-		processing.vertex(processing.width, processing.height);
-		processing.vertex(0, processing.height);
+		processing.vertex(BOTTOM_RIGHT.x, BOTTOM_RIGHT.y);
+		processing.vertex(leftPoint.x, BOTTOM_RIGHT.y);
 		processing.endShape();
 	}
 
 	@Override
 	public void init() {
-		LEFT_POINT = new PVector(0, (int) processing.height * 9f / 10f);
-		RIGHT_POINT = new PVector(processing.width, (int) processing.height * 9f / 10f);
-		ANCHOR_POINT = new PVector(RIGHT_POINT.x / 2, RIGHT_POINT.y);
-		MID_ANCHOR = new PVector(processing.width / 4, RIGHT_POINT.y);
-
 		// TODO: il est possible de créer des formes différentes pour chacun
 		leftPoint = new PVector(LEFT_POINT.x, LEFT_POINT.y);
 		rightPoint = new PVector(RIGHT_POINT.x, RIGHT_POINT.y);
