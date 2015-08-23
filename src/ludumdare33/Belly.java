@@ -144,7 +144,7 @@ public class Belly implements GameObject {
 
 	public void grabBelly() {
 		hair.grabHair();
-		if(hair.isHurt() || hair.isPulledOff()) {
+		if(hair.isHurt() || hair.isPulledOffOrDead()) {
 			releaseBelly();
 		}
 	}
@@ -176,7 +176,7 @@ public class Belly implements GameObject {
 	}
 	
 	public boolean isFinished() {
-		return hair.isPulledOff();
+		return hair.isPulledOffOrDead();
 	}
 	
 	public boolean isGrabbable() {

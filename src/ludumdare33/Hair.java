@@ -30,7 +30,7 @@ public class Hair implements GameObject {
 	private final float MAX_DIST = 150f;
 	private int health;
 	private enum HairState {
-		Released, Grabbed, Hurt, PulledOff
+		Released, Grabbed, Hurt, PulledOff, Dead
 	};
 	private HairState hairState;
 	private Timer hairDeathTimer;
@@ -112,29 +112,36 @@ public class Hair implements GameObject {
 			currentAnchor.x = currentFoot.x + (currentHead.x - currentFoot.x) * 6f/5f;
 			currentAnchor.y = currentFoot.y + (currentFoot.y - currentHead.y) * 4f/5f;
 			break;
+		case Dead:
+			break;
 		}
 	}
 
 	@Override
 	public void display() {
-		if(hairState == HairState.PulledOff)
-			processing.fill(0, 255*(1-hairDeathTimer.getRemainingRatio()));
+		if(hairState == HairState.PulledOff) {
+			float alpha = 255f * (1f - hairDeathTimer.getRemainingRatio());
+			processing.fill(0, alpha);
+			if(alpha == 0)
+				hairState = HairState.Dead;
+		}
 		else
 			processing.fill(0);
-		
-		processing.noStroke();
-		processing.beginShape();
-		// hair
-		processing.vertex(currentFoot.x - THICKNESS, currentFoot.y, z - 1);
-		processing.vertex(currentHead.x - THICKNESS, currentHead.y, z -1);
-		processing.vertex(currentHead.x + THICKNESS, currentHead.y, z -1);
-		processing.vertex(currentFoot.x + THICKNESS, currentFoot.y, z -1);
-		// root
-		processing.vertex(currentFoot.x + 2 * THICKNESS, currentFoot.y + THICKNESS, z -1);
-		processing.vertex(currentFoot.x + THICKNESS, currentFoot.y + 3 * THICKNESS, z -1);
-		processing.vertex(currentFoot.x, currentFoot.y + 3 * THICKNESS, z -1);
-		processing.vertex(currentFoot.x - 2 * THICKNESS, currentFoot.y + THICKNESS, z -1);
-		processing.endShape();
+		if(hairState != HairState.Dead) {
+			processing.noStroke();
+			processing.beginShape();
+			// hair
+			processing.vertex(currentFoot.x - THICKNESS, currentFoot.y, z - 1);
+			processing.vertex(currentHead.x - THICKNESS, currentHead.y, z -1);
+			processing.vertex(currentHead.x + THICKNESS, currentHead.y, z -1);
+			processing.vertex(currentFoot.x + THICKNESS, currentFoot.y, z -1);
+			// root
+			processing.vertex(currentFoot.x + 2 * THICKNESS, currentFoot.y + THICKNESS, z -1);
+			processing.vertex(currentFoot.x + THICKNESS, currentFoot.y + 3 * THICKNESS, z -1);
+			processing.vertex(currentFoot.x, currentFoot.y + 3 * THICKNESS, z -1);
+			processing.vertex(currentFoot.x - 2 * THICKNESS, currentFoot.y + THICKNESS, z -1);
+			processing.endShape();
+		}
 			
 	}
 	
@@ -145,13 +152,13 @@ public class Hair implements GameObject {
 			return false;
 	}
 	
-	public boolean isPulledOff() {
-		if(hairState == HairState.PulledOff)
+	public boolean isPulledOffOrDead() {
+		if(hairState == HairState.PulledOff || hairState == HairState.Dead)
 			return true;
 		else
 			return false;
 	}
-
+	
 	@Override
 	public void init() {
 		currentHead.x = currentFoot.x;
@@ -164,14 +171,14 @@ public class Hair implements GameObject {
 	}
 
 	public void setCurrentFootX(float _x) {
-		if(hairState == HairState.PulledOff)
+		if(isPulledOffOrDead())
 			currentFoot.x = processing.mouseX;
 		else
 			currentFoot.x = _x;
 	}
 
 	public void setCurrentFootY(float _y) {
-		if(hairState == HairState.PulledOff)
+		if(isPulledOffOrDead())
 			currentFoot.y = processing.mouseY;
 		else
 			currentFoot.y = _y;
@@ -185,14 +192,14 @@ public class Hair implements GameObject {
 	}
 
 	public void releaseHair() {
-		if(hairState != HairState.PulledOff) {
+		if(!isPulledOffOrDead()) {
 			hairState = HairState.Released;
 			resetAngleTimer.reset(RESET_ANGLE_TIME);
 		}
 	}
 
 	public void justGrabHair() {
-		if(hairState != HairState.PulledOff) {
+		if(!isPulledOffOrDead()) {
 			z = Belly.GRABBED_Z;
 			hairState = HairState.Grabbed;
 			gniiiAudio.loop();
