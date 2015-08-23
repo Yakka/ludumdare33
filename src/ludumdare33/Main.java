@@ -41,6 +41,9 @@ public class Main extends PApplet {
 		noCursor();
 		
 		textFont = loadFont("ludumdare33/font_text.vlw");
+		monster = new PImage[1];
+		
+		monster[0] = loadImage("ludumdare33/monster.png");
 		
 		minim = new Minim(this);
 		levels = new Level[NB_OF_LEVELS];
