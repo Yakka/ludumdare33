@@ -30,7 +30,7 @@ public class Level extends Panel {
 		hair.setCurrentFootX(belly.getAnchorPoint().x);
 		hair.setCurrentFootY(belly.getAnchorPoint().y);
 		
-		if(belly.isFinished()) {
+		if(isFinished()) {
 			backgroundColor[0] = 142;
 			backgroundColor[1] = 255;
 			backgroundColor[2] = 172;
@@ -90,5 +90,10 @@ public class Level extends Panel {
 			Main.cursor.setGrabbableCursor();
 		else
 			Main.cursor.setBasicCursor();
+	}
+	
+	@Override
+	public boolean isFinished() {
+		return belly.isFinished();
 	}
 }

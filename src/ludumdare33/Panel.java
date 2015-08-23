@@ -63,4 +63,8 @@ public class Panel implements GameObject{
 		for (Iterator<GameObject> i = gameObjects.iterator(); i.hasNext();)
 			i.next().init();		
 	}
+
+	public boolean isFinished() {
+		return false;
+	}
 }

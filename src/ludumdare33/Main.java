@@ -72,13 +72,16 @@ public class Main extends PApplet {
 		bottomRights[4] = new PVector(width * 32 / UNIT, height * 16 / UNIT);
 		
 		for(int i = 0; i < levels.length; i++) {
-			levels[i] = new Level(this, topLefts[i], bottomRights[i], new int[] {221, 234, 255});
-			panels[i] = levels[i];
+			levels[i] = new Level(this, topLefts[i+1], bottomRights[i+1], new int[] {221, 234, 255});
 		}
 		
 		for(int i = 0; i < narratives.length; i++) {
-			narratives[i] = new Narrative(this, topLefts[NB_OF_LEVELS+i], bottomRights[NB_OF_LEVELS+i], new int[] {221, 234, 255}, "I wish I were a kiwi...");
-			panels[i+NB_OF_LEVELS] = narratives[i];
+			narratives[i] = new Narrative(this, topLefts[0], bottomRights[0], new int[] {221, 234, 255}, "I wish I were a kiwi...");
+		}
+		
+		panels[0] = narratives[0];
+		for(int i = 0; i < levels.length; i++) {
+			panels[i+1] = levels[i];
 		}
 		
 		deltaTimeTimer = new Timer(this);
@@ -87,12 +90,15 @@ public class Main extends PApplet {
 	public void draw() {
 		deltaTime = deltaTimeTimer.getDelta();
 		background(255);
+
+		cursor.update();
+		cursor.display();
 		
 		for(int i = 0; i < panels.length; i++) {
-			cursor.update();
-			cursor.display();
 			panels[i].update();
 			panels[i].display();
+			if(!panels[i].isFinished())
+				break;
 		}
 		
 		fill(255);
@@ -110,6 +116,8 @@ public class Main extends PApplet {
 			vertex(panels[i].bottomRight.x, panels[i].bottomRight.y, 5);
 			vertex(panels[i].topLeft.x, panels[i].bottomRight.y, 5);
 			endContour();
+			if(!panels[i].isFinished())
+				break;
 		}
 		endShape(PConstants.CLOSE);
 	}

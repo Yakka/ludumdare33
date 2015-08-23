@@ -86,6 +86,7 @@ public class Narrative extends Panel {
 		currentText = text.substring(0, next);
 	}
 	
+	@Override
 	public boolean isFinished() {
 		return currentText == text && started;
 	}
