@@ -1,5 +1,7 @@
 package ludumdare33;
 
+import ddf.minim.AudioPlayer;
+import ddf.minim.Minim;
 import processing.core.PApplet;
 import processing.core.PVector;
 
@@ -7,6 +9,10 @@ public class Hair implements GameObject {
 
 	private PApplet processing;
 
+	// Sounds
+	private AudioPlayer aoutchAudio;
+	private AudioPlayer gniiiAudio;
+	
 	// Hair position
 	private PVector currentHead;
 	private PVector currentFoot;
@@ -31,6 +37,9 @@ public class Hair implements GameObject {
 	private final int HAIR_DEATH_TIME = 1000;
 
 	public Hair(PApplet _processing) {
+		aoutchAudio = Main.minim.loadFile("ludumdare33/aoutch1.wav");
+		gniiiAudio = Main.minim.loadFile("ludumdare33/gniii.wav");
+		
 		processing = _processing;
 
 		currentHead = new PVector();
@@ -46,6 +55,7 @@ public class Hair implements GameObject {
 		float ratio;
 		switch (hairState) {
 		case Released:
+			gniiiAudio.pause();
 			currentHead.x = currentFoot.x + SIZE * cosinus;
 			currentHead.y = currentFoot.y + SIZE * sinus;
 			currentAnchor.x = currentFoot.x + (currentHead.x - currentFoot.x) * 6f/5f;
@@ -65,11 +75,13 @@ public class Hair implements GameObject {
 					resetAngleTimer.reset(RESET_ANGLE_TIME);
 				} else {
 					hairState = HairState.PulledOff;
+					aoutchAudio.play();
 					hairDeathTimer.reset(HAIR_DEATH_TIME);
 				}
 			}
 			break;
 		case Hurt:
+			gniiiAudio.pause();
 			currentHead.x = currentFoot.x + SIZE * cosinus;
 			currentHead.y = currentFoot.y + SIZE * sinus;
 			currentAnchor.x = currentFoot.x + (currentHead.x - currentFoot.x) * 6f/5f;
@@ -81,6 +93,7 @@ public class Hair implements GameObject {
 			sinus = PApplet.lerp(sinus, -1, 1f - ratio);
 			break;
 		case PulledOff:
+			gniiiAudio.pause();
 			currentHead.x = currentFoot.x + SIZE * cosinus;
 			currentHead.y = currentFoot.y + SIZE * sinus;
 			currentAnchor.x = currentFoot.x + (currentHead.x - currentFoot.x) * 6f/5f;
@@ -129,7 +142,7 @@ public class Hair implements GameObject {
 		cosinus = 0;
 		sinus = -1;
 		hairState = HairState.Released;
-		health = 3;
+		health = 1;
 	}
 
 	public void setCurrentFootX(float _x) {
@@ -173,6 +186,7 @@ public class Hair implements GameObject {
 	public void justGrabHair() {
 		if(hairState != HairState.PulledOff) {
 			hairState = HairState.Grabbed;
+			gniiiAudio.loop();
 		}
 	}
 

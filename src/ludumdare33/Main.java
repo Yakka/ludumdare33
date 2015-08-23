@@ -1,9 +1,12 @@
 package ludumdare33;
 
+import ddf.minim.Minim;
 import processing.core.PApplet;
 
 public class Main extends PApplet {
 	private static final long serialVersionUID = 1L;
+	
+	public static Minim minim;
 
 	private Level hairsLevel;
 
@@ -12,6 +15,8 @@ public class Main extends PApplet {
 
 	public void setup() {
 		size(displayWidth, displayHeight, P3D);
+		
+		minim = new Minim(this);
 		
 		hairsLevel = new Level(this);
 		
