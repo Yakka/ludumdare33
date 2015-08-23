@@ -87,23 +87,29 @@ public class Hair implements GameObject {
 
 	@Override
 	public void display() {
-		if(hairState != HairState.PulledOff) {
-			processing.fill(0);
-			processing.noStroke();
-			processing.beginShape();
-			processing.vertex(currentFoot.x, currentFoot.y, -1);
-			processing.bezierVertex(currentFoot.x, currentFoot.y, -1, 
-					currentAnchor.x - THICKNESS, currentAnchor.y, -1, 
-					currentHead.x - THICKNESS, currentHead.y, -1);
-			processing.bezierVertex(currentHead.x + THICKNESS, currentHead.y, -1, 
-					currentAnchor.x + THICKNESS, currentAnchor.y, -1, 
-					currentFoot.x, currentFoot.y, -1);
-			processing.endShape();
-		}
+		processing.fill(0);
+		processing.noStroke();
+		processing.beginShape();
+		processing.vertex(currentFoot.x, currentFoot.y, -1);
+		processing.bezierVertex(currentFoot.x, currentFoot.y, -1, 
+				currentAnchor.x - THICKNESS, currentAnchor.y, -1, 
+				currentHead.x - THICKNESS, currentHead.y, -1);
+		processing.bezierVertex(currentHead.x + THICKNESS, currentHead.y, -1, 
+				currentAnchor.x + THICKNESS, currentAnchor.y, -1, 
+				currentFoot.x, currentFoot.y, -1);
+		processing.endShape();
+			
 	}
 	
 	public boolean isHurt() {
 		if(hairState == HairState.Hurt)
+			return true;
+		else
+			return false;
+	}
+	
+	public boolean isPulledOff() {
+		if(hairState == HairState.PulledOff)
 			return true;
 		else
 			return false;
@@ -158,7 +164,9 @@ public class Hair implements GameObject {
 	}
 
 	public void justGrabHair() {
-		hairState = HairState.Grabbed;
+		if(hairState != HairState.PulledOff) {
+			hairState = HairState.Grabbed;
+		}
 	}
 
 }

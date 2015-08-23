@@ -77,7 +77,7 @@ public class Level implements GameObject {
 	}
 
 	public void mouseDragged() {
-		if(!hair.isHurt()) {
+		if(!hair.isHurt() && !hair.isPulledOff()) {
 			belly.grabBelly();
 			hair.grabHair();
 		} else {
