@@ -66,6 +66,7 @@ public class Level extends Panel {
 		hair.setCurrentFootY(belly.getAnchorPoint().y);
 	}
 	
+	@Override
 	public void mousePressed() {
 		belly.justGrabBelly();
 		if(belly.isGrabbable())

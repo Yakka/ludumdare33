@@ -7,8 +7,11 @@ import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PVector;
 
-public class Panel implements GameObject{
+public abstract class Panel implements GameObject{
 	protected PApplet processing;
+	
+	protected boolean started = false;
+	protected boolean iAmHere = false;
 	
 	// Contour
 	protected final int MARGIN = 2;
@@ -30,8 +33,13 @@ public class Panel implements GameObject{
 		gameObjects = new ArrayList<GameObject>();
 	}
 	
+	public boolean iAmHere() {
+		return iAmHere;
+	}
+	
 	@Override
 	public void update() {
+		iAmHere = true;
 		for (Iterator<GameObject> i = gameObjects.iterator(); i.hasNext();)
 			i.next().update();
 	}
@@ -61,10 +69,23 @@ public class Panel implements GameObject{
 	@Override
 	public void init() {
 		for (Iterator<GameObject> i = gameObjects.iterator(); i.hasNext();)
-			i.next().init();		
+			i.next().init();
+
+		started = false;
+		iAmHere = false;
 	}
 
 	public boolean isFinished() {
 		return false;
 	}
+	
+	public boolean hasStarted() {
+		return started;
+	}
+	
+	public void start() {
+		started = true;
+	}
+
+	public abstract void mousePressed();
 }
