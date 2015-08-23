@@ -47,7 +47,7 @@ public class Main extends PApplet {
 		bottomRights[3] = new PVector(width * 21 / UNIT, height * 49 / UNIT);
 		
 		for(int i = 0; i < levels.length; i++) {
-			levels[i] = new Level(this, topLefts[i], bottomRights[i]);
+			levels[i] = new Level(this, topLefts[i], bottomRights[i], new int[] {221, 234, 255});
 		}
 		
 		deltaTimeTimer = new Timer(this);

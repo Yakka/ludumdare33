@@ -16,11 +16,15 @@ public class Level implements GameObject {
 	private final int MARGIN = 2;
 	public PVector topLeft;
 	public PVector bottomRight;
+	
+	// Colors
+	private int[] backgroundColor; // Background color
 
 	private ArrayList<GameObject> gameObjects;
 
-	public Level(PApplet _processing, PVector _topLeft, PVector _bottomRight) {
+	public Level(PApplet _processing, PVector _topLeft, PVector _bottomRight, int _backgroundColor[]) {
 		processing = _processing;
+		backgroundColor = _backgroundColor;
 		topLeft = new PVector(_topLeft.x, _topLeft.y);
 		bottomRight = new PVector(_bottomRight.x, _bottomRight.y);
 		// Create elements from the level
@@ -44,6 +48,13 @@ public class Level implements GameObject {
 		hair.setCurrentFootY(belly.getAnchorPoint().y);
 		for (Iterator<GameObject> i = gameObjects.iterator(); i.hasNext();)
 			i.next().update();
+		
+		if(belly.isFinished()) {
+			backgroundColor[0] = 142;
+			backgroundColor[1] = 255;
+			backgroundColor[2] = 172;
+		}
+			
 	}
 
 	@Override
@@ -55,6 +66,7 @@ public class Level implements GameObject {
 			z = Belly.UNGRABBED_Z;
 		
 		processing.fill(221, 234, 255);
+		processing.fill(backgroundColor[0], backgroundColor[1], backgroundColor[2]);
 		processing.noStroke();
 		processing.beginShape();
 		// Background

@@ -175,6 +175,10 @@ public class Belly implements GameObject {
 		return bellyState == BellyState.Sleep;
 	}
 	
+	public boolean isFinished() {
+		return hair.isPulledOff();
+	}
+	
 	public boolean isGrabbable() {
 		return PApplet.dist(processing.mouseX, processing.mouseY, ANCHOR_POINT.x, ANCHOR_POINT.y) < 100;
 	}
