@@ -70,7 +70,7 @@ public class Main extends PApplet {
 		}
 		
 		for(int i = 0; i < narratives.length; i++) {
-			narratives[i] = new Narrative(this, topLefts[NB_OF_LEVELS+i], bottomRights[NB_OF_LEVELS+i], new int[] {221, 234, 255}, "Prout...");
+			narratives[i] = new Narrative(this, topLefts[NB_OF_LEVELS+i], bottomRights[NB_OF_LEVELS+i], new int[] {221, 234, 255}, "I wish I were a kiwi...");
 			panels[i+NB_OF_LEVELS] = narratives[i];
 		}
 		
