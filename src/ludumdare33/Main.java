@@ -10,6 +10,8 @@ import processing.core.PVector;
 public class Main extends PApplet {
 	private static final long serialVersionUID = 1L;
 	
+	public static Cursor cursor;
+	
 	public static Minim minim;
 
 	
@@ -39,6 +41,8 @@ public class Main extends PApplet {
 		size(displayWidth, displayHeight, P3D);
 		ortho();
 		noCursor();
+
+		cursor = new Cursor(this);
 		
 		textFont = loadFont("ludumdare33/font_text.vlw");
 		monster = new PImage[1];
@@ -85,6 +89,8 @@ public class Main extends PApplet {
 		background(255);
 		
 		for(int i = 0; i < panels.length; i++) {
+			cursor.update();
+			cursor.display();
 			panels[i].update();
 			panels[i].display();
 		}
@@ -116,6 +122,9 @@ public class Main extends PApplet {
 	public void mousePressed() {
 		for(int i = 0; i < levels.length; i++) {
 			levels[i].mousePressed();
+		}
+		for(int i = 0; i < narratives.length; i++) {
+			narratives[i].mousePressed();
 		}
 	}
 	

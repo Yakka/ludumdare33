@@ -7,6 +7,7 @@ import processing.core.PVector;
 public class Narrative extends Panel {
 
 	// Dialogue
+	private boolean started = false;
 	private String text = "";
 	private String currentText = "";
 	private final int TEXT_MARGIN = 20 + MARGIN;
@@ -32,16 +33,18 @@ public class Narrative extends Panel {
 	public void init() {
 		super.init();
 		currentText = "";
-		textTimer.reset(MILLIS_PER_CHAR * text.length());
 		lastChar = 0;
+		started = false;
 	}
 	
 	@Override
 	public void update() {
-		updateCurrentText();
-		if(lastChar != currentText.length()) {
-			position.y += 2 * processing.random(-1f, 1f);
-			lastChar ++;
+		if(started) {
+			updateCurrentText();
+			if(lastChar != currentText.length()) {
+				position.y += 2 * processing.random(-1f, 1f);
+				lastChar ++;
+			}
 		}
 	}
 	
@@ -67,6 +70,16 @@ public class Narrative extends Panel {
 		processing.rectMode(PConstants.CORNER);
 	}
 	
+	public void mousePressed() {
+		if(PApplet.dist(processing.mouseX, processing.mouseY, position.x + SIZE /2, position.y + SIZE /2) < SIZE && !started)
+			start();
+	}
+	
+	public void start() {
+		textTimer.reset(MILLIS_PER_CHAR * text.length());
+		started = true;
+	}
+	
 	private void updateCurrentText() {
 		int next = 0;
 		next = (int) (textTimer.getRemainingRatio() * text.length());
@@ -74,7 +87,7 @@ public class Narrative extends Panel {
 	}
 	
 	public boolean isFinished() {
-		return currentText == text;
+		return currentText == text && started;
 	}
 	
 }

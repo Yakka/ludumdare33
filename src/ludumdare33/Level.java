@@ -7,7 +7,6 @@ public class Level extends Panel {
 	
 	private Belly belly;
 	private Hair hair;
-	private Cursor cursor;
 
 	public Level(PApplet _processing, PVector _topLeft, PVector _bottomRight, int _backgroundColor[]) {
 		// Creates the panel
@@ -15,15 +14,13 @@ public class Level extends Panel {
 		
 		// Creates elements of the level
 		hair = new Hair(processing);
-		cursor = new Cursor(processing);
-		belly = new Belly(processing, hair, cursor, 
+		belly = new Belly(processing, hair, 
 				new PVector(topLeft.x, bottomRight.y * 9f / 10f),
 				new PVector(topLeft.x + (bottomRight.x - topLeft.x) / 2, bottomRight.y * 9f / 10f),
 				new PVector(bottomRight.x, bottomRight.y * 9f / 10f),
 				bottomRight);
 		gameObjects.add(hair);
 		gameObjects.add(belly);
-		gameObjects.add(cursor);
 		init();
 	}
 
@@ -72,26 +69,26 @@ public class Level extends Panel {
 	public void mousePressed() {
 		belly.justGrabBelly();
 		if(belly.isGrabbable())
-			cursor.setGrabbingCursor();
+			Main.cursor.setGrabbingCursor();
 		else
-			cursor.setGrabbingCursor();
+			Main.cursor.setGrabbingCursor();
 		belly.grabBelly();
 	}
 
 	public void mouseDragged() {
-		cursor.setGrabbingCursor();
+		Main.cursor.setGrabbingCursor();
 		belly.grabBelly();
 	}
 
 	public void mouseReleased() {
 		belly.releaseBelly();
-		cursor.setBasicCursor();
+		Main.cursor.setBasicCursor();
 	}
 	
 	public void mouseMoved() {
 		if(belly.isGrabbable())
-			cursor.setGrabbableCursor();
+			Main.cursor.setGrabbableCursor();
 		else
-			cursor.setBasicCursor();
+			Main.cursor.setBasicCursor();
 	}
 }

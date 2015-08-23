@@ -20,9 +20,6 @@ public class Belly implements GameObject {
 	public static final float GRABBED_Z = -3f;
 	public static final float UNGRABBED_Z = 0f;
 	
-	// Cursor
-	private Cursor cursor;
-	
 	// Belly state
 	private enum BellyState {
 		Sleep, Grabbed, Released
@@ -49,13 +46,12 @@ public class Belly implements GameObject {
 
 	private Hair hair;
 	
-	public Belly(PApplet _processing, Hair _hair, Cursor _cursor, PVector _leftBorder, PVector _anchorPoint, PVector _rightBorder, PVector _bottomRight) {
+	public Belly(PApplet _processing, Hair _hair, PVector _leftBorder, PVector _anchorPoint, PVector _rightBorder, PVector _bottomRight) {
 		releaseTimer = new Timer(_processing);
 		dropOrigin = new PVector();
 		factorAnchorPoint = new PVector();
 		processing = _processing;
 		hair = _hair;
-		cursor = _cursor;
 		
 		LEFT_POINT = new PVector(_leftBorder.x, _leftBorder.y);
 		RIGHT_POINT = new PVector(_rightBorder.x, _rightBorder.y);
@@ -69,7 +65,7 @@ public class Belly implements GameObject {
 	public void update() {
 		switch (bellyState) {
 		case Released:
-			cursor.setBlocked(false);
+			Main.cursor.setBlocked(false);
 			float remainingTimeRatio = releaseTimer.getRemainingRatio();
 
 			anchorPoint.y = ANCHOR_POINT.y + (float) ((processing.height - dropOrigin.y) * (1f - remainingTimeRatio)
@@ -92,15 +88,15 @@ public class Belly implements GameObject {
 				anchorPoint.x = processing.mouseX;
 				anchorPoint.y = processing.mouseY;
 				
-				cursor.setBlocked(false);
+				Main.cursor.setBlocked(false);
 			} else { // too far for the belly
 				float cosinus = (processing.mouseX - ANCHOR_POINT.x) / distance;
 				float sinus = (processing.mouseY - ANCHOR_POINT.y) / distance;
 				anchorPoint.x = ANCHOR_POINT.x + MAX_DISTANCE * cosinus;
 				anchorPoint.y = ANCHOR_POINT.y + MAX_DISTANCE * sinus;
 				
-				cursor.setBlocked(true);
-				cursor.setPosition(anchorPoint.x, anchorPoint.y);
+				Main.cursor.setBlocked(true);
+				Main.cursor.setPosition(anchorPoint.x, anchorPoint.y);
 			}
 			if (anchorPoint.y > ANCHOR_POINT.y) {
 				anchorPoint.y = ANCHOR_POINT.y;
