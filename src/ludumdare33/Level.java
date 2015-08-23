@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import processing.core.PApplet;
+import processing.core.PConstants;
 
 public class Level implements GameObject {
 	private PApplet processing;
@@ -19,8 +20,8 @@ public class Level implements GameObject {
 	public Level(PApplet _processing) {
 		processing = _processing;
 		// Create elements from the level
-		belly = new Belly(processing);
 		hair = new Hair(processing);
+		belly = new Belly(processing, hair);
 		gameObjects = new ArrayList<GameObject>();
 		gameObjects.add(hair);
 		gameObjects.add(belly);
@@ -44,7 +45,7 @@ public class Level implements GameObject {
 		
 		processing.fill(255);
 		processing.strokeWeight(5);
-		processing.strokeJoin(processing.MITER);
+		processing.strokeJoin(PConstants.MITER);
 		processing.stroke(0);
 		processing.beginShape();
 		// Exterior part of shape, clockwise winding
@@ -59,7 +60,7 @@ public class Level implements GameObject {
 		processing.vertex(processing.width - MARGIN - THICKNESS, processing.height - MARGIN - THICKNESS);
 		processing.vertex(MARGIN + THICKNESS, processing.height - MARGIN - THICKNESS);
 		processing.endContour();
-		processing.endShape(processing.CLOSE);
+		processing.endShape(PConstants.CLOSE);
 	}
 
 	@Override
@@ -71,23 +72,14 @@ public class Level implements GameObject {
 	}
 	
 	public void mousePressed() {
-		if(PApplet.dist(processing.mouseX, processing.mouseY, belly.ANCHOR_POINT.x, belly.ANCHOR_POINT.y) < 100)
 		belly.justGrabBelly();
-		hair.justGrabHair();
 	}
 
 	public void mouseDragged() {
-		if(!hair.isHurt() && !hair.isPulledOff()) {
-			belly.grabBelly();
-			hair.grabHair();
-		} else {
-			belly.releaseBelly();
-			hair.grabHair();
-		}
+		belly.grabBelly();
 	}
 
 	public void mouseReleased() {
 		belly.releaseBelly();
-		hair.releaseHair();
 	}
 }

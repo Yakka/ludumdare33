@@ -39,11 +39,14 @@ public class Belly implements GameObject {
 	private final float MAX_DISTANCE = 300f; // The maximum distance when
 												// grabbed
 
-	public Belly(PApplet _processing) {
+	private Hair hair;
+	
+	public Belly(PApplet _processing, Hair _hair) {
 		releaseTimer = new Timer(_processing);
 		dropOrigin = new PVector();
 		factorAnchorPoint = new PVector();
 		processing = _processing;
+		hair = _hair;
 		init();
 	}
 
@@ -117,10 +120,14 @@ public class Belly implements GameObject {
 	}
 
 	public void grabBelly() {
-		//if (bellyState != BellyState.Released)
+		hair.grabHair();
+		if(hair.isHurt() || hair.isPulledOff()) {
+			releaseBelly();
+		}
 	}
 
 	public void releaseBelly() {
+		hair.releaseHair();
 		if(bellyState == BellyState.Grabbed) {
 			// Change state and initiate timers
 			bellyState = BellyState.Released;
@@ -146,7 +153,10 @@ public class Belly implements GameObject {
 	}
 
 	public void justGrabBelly() {
-		bellyState = BellyState.Grabbed;
+		if(PApplet.dist(processing.mouseX, processing.mouseY, ANCHOR_POINT.x, ANCHOR_POINT.y) < 100) {
+			bellyState = BellyState.Grabbed;
+			hair.justGrabHair();
+		}
 	}
 
 }
