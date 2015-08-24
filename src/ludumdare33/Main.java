@@ -14,6 +14,7 @@ public class Main extends PApplet {
 	
 	public static Minim minim;
 
+	private boolean splashscreen = true;
 	
 	private PVector[] topLefts;
 	private PVector[] bottomRights;
@@ -21,15 +22,17 @@ public class Main extends PApplet {
 	private Panel[] panels;
 	private Narrative[] narratives;
 	private String[] texts = {
-			"This kiwi party is gonna happen tonight and I don't even look like a fruit.",
-			"Maybe I could infiltrate the party by disguising myself into a kiwi? But how...",
-			"wow, I just have to pull off each one of my hairs! Who's the genius, yo?",
-			"Yes, it's getting colder... I mean, fresher, like a kiwi! A few more...",
-			"It hurted but, wow, I look like a kiwi now. Let's go party."
+			"All my life, I was a hairy monster.",
+			"If only I could be something fresher. Let's say a kiwi.",
+			"Oh, this could be the solution? Pulling off each one of my hairs...",
+			"Yes, I feel colder. I mean, I feel fresher. Closer to the kiwi! Just a few more...",
+			"It kind of hurted, but finally I am a kiwi. Life is better when you can be the fruit of your choice."
 			};
 	
 	private final int NB_OF_LEVELS = 6;
 	private final int NB_OF_NARRATIVES = 5;
+	
+	private PImage img;
 	
 	// Font
 	public static PFont textFont;
@@ -53,6 +56,8 @@ public class Main extends PApplet {
 		
 		textFont = loadFont("ludumdare33/font_text.vlw");
 		monster = new PImage[2];
+		img = new PImage();
+		img = loadImage("ludumdare33/splashscreen.png");
 		
 		monster[0] = loadImage("ludumdare33/monster.png");
 		monster[1] = loadImage("ludumdare33/monster2.png");
@@ -129,36 +134,50 @@ public class Main extends PApplet {
 	public void draw() {
 		deltaTime = deltaTimeTimer.getDelta();
 		background(255);
-
-		cursor.update();
-		cursor.display();
 		
-		for(int i = 0; i < panels.length; i++) {
-			panels[i].update();
-			panels[i].display();
-			if(!panels[i].isFinished())
-				break;
-		}
 		
-		fill(255);
-		beginShape();
-		// Exterior part of shape, clockwise winding
-		vertex(0, 0);
-		vertex(width, 0);
-		vertex(width, height);
-		vertex(0, height);
-		// Interior part of shape, counter-clockwise winding
-		for(int i = 0; i < panels.length; i++) {
-			beginContour();
-			vertex(panels[i].topLeft.x, panels[i].topLeft.y, 5);
-			vertex(panels[i].bottomRight.x, panels[i].topLeft.y, 5);
-			vertex(panels[i].bottomRight.x, panels[i].bottomRight.y, 5);
-			vertex(panels[i].topLeft.x, panels[i].bottomRight.y, 5);
-			endContour();
-			if(!panels[i].isFinished())
-				break;
+		if(splashscreen) {
+			beginShape();
+			textureMode(PConstants.NORMAL);
+			texture(img);
+			vertex(0, 0, 0, 0);
+			vertex(width, 0, 1, 0);
+			vertex(width, height, 1, 1);
+			vertex(0, height, 0, 1);
+			endShape();
+			textureMode(PConstants.IMAGE);
+			
 		}
-		endShape(PConstants.CLOSE);
+		else {
+			cursor.update();
+			cursor.display();
+			for(int i = 0; i < panels.length; i++) {
+				panels[i].update();
+				panels[i].display();
+				if(!panels[i].isFinished())
+					break;
+			}
+			
+			fill(255);
+			beginShape();
+			// Exterior part of shape, clockwise winding
+			vertex(0, 0);
+			vertex(width, 0);
+			vertex(width, height);
+			vertex(0, height);
+			// Interior part of shape, counter-clockwise winding
+			for(int i = 0; i < panels.length; i++) {
+				beginContour();
+				vertex(panels[i].topLeft.x, panels[i].topLeft.y, 5);
+				vertex(panels[i].bottomRight.x, panels[i].topLeft.y, 5);
+				vertex(panels[i].bottomRight.x, panels[i].bottomRight.y, 5);
+				vertex(panels[i].topLeft.x, panels[i].bottomRight.y, 5);
+				endContour();
+				if(!panels[i].isFinished())
+					break;
+			}
+			endShape(PConstants.CLOSE);
+		}
 	}
 
 	
@@ -167,6 +186,7 @@ public class Main extends PApplet {
 	}
 	
 	public void mousePressed() {
+		splashscreen = false;
 		for(int i = 0; i < levels.length; i++) {
 			if(levels[i].iAmHere())
 				levels[i].mousePressed();

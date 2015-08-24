@@ -16,7 +16,7 @@ public class Narrative extends Panel {
 	private final int TEXT_MARGIN = 20 + MARGIN;
 	
 	private Timer textTimer;
-	private final int MILLIS_PER_CHAR = 1; //100
+	private final int MILLIS_PER_CHAR = 100; //100
 	
 	// Monster
 	private int animationIndex;
