@@ -23,11 +23,13 @@ public class Main extends PApplet {
 	private String[] texts = {
 			"This kiwi party is gonna happen tonight and I don't even look like a fruit.",
 			"Maybe I could infiltrate the party by disguising myself into a kiwi? But how...",
-			"How, I just have to pull off each one of my hairs! Who's the genius, yo?"
+			"wow, I just have to pull off each one of my hairs! Who's the genius, yo?",
+			"Yes, it's getting colder... I mean, fresher, like a kiwi! A few more...",
+			"It hurted but, wow, I look like a kiwi now. Let's go party."
 			};
 	
-	private final int NB_OF_LEVELS = 4;
-	private final int NB_OF_NARRATIVES = 2;
+	private final int NB_OF_LEVELS = 6;
+	private final int NB_OF_NARRATIVES = 5;
 	
 	// Font
 	public static PFont textFont;
@@ -50,9 +52,10 @@ public class Main extends PApplet {
 		cursor = new Cursor(this);
 		
 		textFont = loadFont("ludumdare33/font_text.vlw");
-		monster = new PImage[1];
+		monster = new PImage[2];
 		
 		monster[0] = loadImage("ludumdare33/monster.png");
+		monster[1] = loadImage("ludumdare33/monster2.png");
 		
 		minim = new Minim(this);
 		levels = new Level[NB_OF_LEVELS];
@@ -61,39 +64,64 @@ public class Main extends PApplet {
 		topLefts = new PVector[NB_OF_LEVELS+NB_OF_NARRATIVES];
 		bottomRights = new PVector[NB_OF_LEVELS+NB_OF_NARRATIVES];
 		
+		// Narratives
+		
 		topLefts[0] = new PVector(MARGIN, MARGIN);
 		bottomRights[0] = new PVector(width * 10 / UNIT, height * 16 / UNIT);
 		
 		topLefts[1] = new PVector(MARGIN, height * 17 / UNIT);
-		bottomRights[1] = new PVector(width * 10 / UNIT, height * 33 / UNIT);
+		bottomRights[1] = new PVector(width * 10 / UNIT, height * 32 / UNIT);
 		
-		topLefts[2] = new PVector(width * 11 / UNIT, MARGIN);
-		bottomRights[2] = new PVector(width * 21 / UNIT, height * 33 / UNIT);
+		topLefts[2] = new PVector(MARGIN, height * 33 / UNIT);
+		bottomRights[2] = new PVector(width * 10 / UNIT, height - MARGIN);
 		
-		topLefts[3] = new PVector(MARGIN, height * 34 / UNIT);
-		bottomRights[3] = new PVector(width * 21 / UNIT, height * 49 / UNIT);
+		topLefts[3] = new PVector(width * 23 / UNIT, height * 17 / UNIT);
+		bottomRights[3] = new PVector(width * 33 / UNIT, height * 32 / UNIT);
 		
-		topLefts[4] = new PVector(width * 22 / UNIT, MARGIN);
-		bottomRights[4] = new PVector(width * 32 / UNIT, height * 16 / UNIT);
+		topLefts[4] = new PVector(width * 34 / UNIT, height * 33 / UNIT);
+		bottomRights[4] = new PVector(width - MARGIN, height - MARGIN);
 		
-		topLefts[5] = new PVector(width * 33 / UNIT, MARGIN);
-		bottomRights[5] = new PVector(width * 50 / UNIT, height * 16 / UNIT);
+		
+		// Levels
+		
+		topLefts[5] = new PVector(width * 11 / UNIT, MARGIN);
+		bottomRights[5] = new PVector(width * 22 / UNIT, height * 32 / UNIT);
+		
+		topLefts[6] = new PVector(width * 11 / UNIT, height * 33 / UNIT);
+		bottomRights[6] = new PVector(width * 22 / UNIT, height - MARGIN);
+		
+		topLefts[7] = new PVector(width * 23 / UNIT, MARGIN);
+		bottomRights[7] = new PVector(width * 33 / UNIT, height * 16 / UNIT);
+		
+		topLefts[8] = new PVector(width * 34 / UNIT, MARGIN);
+		bottomRights[8] = new PVector(width - MARGIN, height * 16 / UNIT);
+		
+		topLefts[9] = new PVector(width * 34 / UNIT, height * 17 / UNIT);
+		bottomRights[9] = new PVector(width - MARGIN, height * 32 / UNIT);
+		
+		topLefts[10] = new PVector(width * 23 / UNIT, height * 33 / UNIT);
+		bottomRights[10] = new PVector(width * 33 / UNIT, height - MARGIN);
 		
 		for(int i = 0; i < levels.length; i++) {
-			levels[i] = new Level(this, topLefts[i+2], bottomRights[i+2], new int[] {221, 234, 255});
+			levels[i] = new Level(this, topLefts[i+NB_OF_NARRATIVES], bottomRights[i+NB_OF_NARRATIVES], new int[] {221, 234, 255});
 		}
 		
 		for(int i = 0; i < narratives.length; i++) {
-			narratives[i] = new Narrative(this, topLefts[i], bottomRights[i], new int[] {221, 234, 255}, texts[i]);
+			narratives[i] = new Narrative(this, topLefts[i], bottomRights[i], new int[] {221, 234, 255}, texts[i], i == narratives.length - 1? 1 : 0);
 		}
 		
 		// FUCKING STORY TELLING
 		panels[0] = narratives[0];
 		panels[1] = narratives[1];
-		
-		for(int i = 0; i < levels.length; i++) {
-			panels[i+2] = levels[i];
-		}
+		panels[2] = levels[0];
+		panels[3] = narratives[2];
+		panels[4] = levels[1];
+		panels[5] = levels[2];
+		panels[6] = levels[3];
+		panels[7] = narratives[3];
+		panels[8] = levels[4];
+		panels[9] = levels[5];
+		panels[10] = narratives[4];
 		
 		deltaTimeTimer = new Timer(this);
 	}
@@ -144,10 +172,8 @@ public class Main extends PApplet {
 				levels[i].mousePressed();
 		}
 		for(int i = 0; i < narratives.length; i++) {
-			if(narratives[i].iAmHere()) {
+			if(narratives[i].iAmHere())
 				narratives[i].mousePressed();
-				System.out.println("Click");
-			}
 		}
 	}
 	

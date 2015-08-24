@@ -15,9 +15,9 @@ public class Level extends Panel {
 		// Creates elements of the level
 		hair = new Hair(processing);
 		belly = new Belly(processing, hair, 
-				new PVector(topLeft.x, bottomRight.y * 9f / 10f),
-				new PVector(topLeft.x + (bottomRight.x - topLeft.x) / 2, bottomRight.y * 9f / 10f),
-				new PVector(bottomRight.x, bottomRight.y * 9f / 10f),
+				new PVector(topLeft.x, bottomRight.y * 9f / 10f + processing.random(-bottomRight.y * 1f / 10f, bottomRight.y * 1f / 10f)),
+				new PVector(topLeft.x + (bottomRight.x - topLeft.x) / 2, bottomRight.y * 9f / 10f + processing.random(-bottomRight.y * 1f / 10f, bottomRight.y * 1f / 10f)),
+				new PVector(bottomRight.x, bottomRight.y * 9f / 10f + processing.random(-bottomRight.y * 1f / 10f, bottomRight.y * 1f / 10f)),
 				bottomRight);
 		gameObjects.add(hair);
 		gameObjects.add(belly);
@@ -47,11 +47,11 @@ public class Level extends Panel {
 		else
 			z = Belly.UNGRABBED_Z;
 		
+		// Background
 		processing.fill(221, 234, 255);
 		processing.fill(backgroundColor[0], backgroundColor[1], backgroundColor[2]);
 		processing.noStroke();
 		processing.beginShape();
-		// Background
 		processing.vertex(topLeft.x, topLeft.y, z - 2);
 		processing.vertex(bottomRight.x, topLeft.y, z - 2);
 		processing.vertex(bottomRight.x, bottomRight.y, z - 2);
